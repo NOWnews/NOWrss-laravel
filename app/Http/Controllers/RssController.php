@@ -167,8 +167,12 @@ class RssController extends Controller
     {
 	//select uuid and check layout_style
 	$feed = Feed::where(['uuid'=>$uuid])->first();
-	$FeedLanguage = $feed->language;
+	$FeedStatus = '';
 	if($feed){
+	    $FeedLanguage = $feed->language;
+            $FeedStatus = $feed->status;
+	}
+	if($FeedStatus == '1'){
 	    /*********************
 	     *Set Feed Info Start*
 	     *********************/
@@ -237,7 +241,9 @@ class RssController extends Controller
 	    //dd('123');
 
             return response()->view(strtolower($feed->layout), ['rssPosts'=>$rssPosts,'milliseconds'=>$milliseconds,'UUID'=>$UUID] )->header('Content-Type', 'text/xml');
-        }else{
+        }elseif($FeedStatus == '0'){
+	    return view('welcome')->with(['uuid'=>$uuid, 'errmsg'=>'此Rss已停用，請通知管理員']);
+	}else{
 	    return view('welcome')->with('uuid', $uuid);
 	}
     }

@@ -80,14 +80,18 @@
             <div class="content">
                 <div class="title m-b-md">
                     ERROR UUID <br> {{ $uuid }}
+		    @if (isset($errmsg))
+			{{ $errmsg }}
+		    @endif
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="https://www.nownews.com/">NOWnews</a>
+                    <a href="https://bobee.nownews.com/">BobeeNOW</a>
+                    <a href="https://chinapost.nownews.com/">The China Post</a>
+                    <a href="https://petsmao.nownews.com/">Petsmao</a>
+                    <a href="https://sight.nownews.com/">Sight</a>
+		    <a href="https://trend.nownews.com/">TrendNOW</a>
                 </div>
             </div>
         </div>

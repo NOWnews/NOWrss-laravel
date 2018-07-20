@@ -83,7 +83,7 @@ class FeedController extends Controller
       *     'title' => 'required',
       * ]);
       */
-
+	//dd($request->all());
 	$validator = Validator::make($request->all(), [
             'title' => 'required',
             'category' =>'required_without_all',
@@ -118,7 +118,7 @@ class FeedController extends Controller
             'category' => $cat_param,
             'uuid' => $uuid_param,
         ]);
-
+	//dd($request->all());
         $feed = Feed::create($request->all());
         return redirect()->route('feeds.index')
                         ->with('success',$feed->title.' 已建立');

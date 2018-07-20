@@ -8,6 +8,6 @@ class Feed extends Model
 {
     //
     protected $fillable = [
-        'create_time', 'title', 'language', 'category', 'uuid', 'layout'
+        'status', 'create_time', 'title', 'language', 'category', 'uuid', 'layout'
     ];
 }
