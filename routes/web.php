@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome')->with('uuid', 'none');
 });
+
+Route::get('/rss/{uuid}', 'RssController@index');
+
+Route::resource('feeds','FeedController');
