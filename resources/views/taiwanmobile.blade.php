@@ -1,4 +1,4 @@
-@extends('base.base')
+@extends('base.taiwanmobilebase')
 
 @section('block')
 @foreach ($rssPosts as $rssPost)
@@ -11,6 +11,7 @@
                         @if ($rssPost->image)
                         <div class="main-photo"><img src="{!! $rssPost->image->guid !!}" alt="{!! $rssPost->image->title !!}" /><cite>{!! $rssPost->image->title !!}</cite></div>
                         @endif
+			%THISISAD%
                         {!! $rssPost->content !!}
                 ]]>
             </description>
@@ -24,7 +25,7 @@
                 ]]>
             </subcategory>
             <author>{{ $rssPost->author }}</author>
-            <pubDate>{{ $rssPost->date }}</pubDate>
+            <pubDate>{{ $rssPost->TaiwanMobileDate }}</pubDate>
         </item>
 @endforeach
 @endsection

@@ -43,7 +43,12 @@
 <div class="container mt-1 p-3">
     @yield('content')
 </div>
-
+<footer class="main-footer p-3">
+    <div class="pull-right hidden-xs">
+        <a href="http://www.nownews.com">NOWnews.com.</a> <span>All Rights Reserved</span>.
+    </div>
+    <strong>今日傳媒(股)公司版權所有，非經授權，不許轉載本網站內容 © 2018 </strong>
+</footer>
 
 </body>
 </html>

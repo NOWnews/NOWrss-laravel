@@ -12,6 +12,14 @@
                         <div class="main-photo"><img src="{!! $rssPost->image->guid !!}" alt="{!! $rssPost->image->title !!}" /><cite>{!! $rssPost->image->title !!}</cite></div>
                         @endif
                         {!! $rssPost->content !!}
+			@if ($rssPost->sameCatNews)
+			<div>
+			    <h2>相關新聞</h2>
+			    @foreach ($rssPost->sameCatNews as $News)
+			    <h3><a href="{{ $News->guid }}&amp;utm_source=sina&amp;utm_medium=rss&amp;utm_campaign={{ date('Ymd') }}">{{ $News->title }}</a><h3>
+			    @endforeach
+			</div>
+			@endif
                 ]]>
             </description>
             <summary>

@@ -19,8 +19,8 @@
             <contents>
 		@if ($rssPost->image)
                     <image>
-                        <title>{{ $rssPost->image }}</title>
-                        <url>{{ $rssPost->guid }}</url>
+                        <title>{{ $rssPost->image->title }}</title>
+                        <url>{{ $rssPost->image->guid }}</url>
                     </image>
                 @endif
                 <text>
