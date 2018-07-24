@@ -49,10 +49,15 @@ class FeedController extends Controller
             return $this->create_uuid();
         }
     }
-    public function index()
+    public function index(Request $request)
     {
         $cats = $this->get_category();
-        $feeds = Feed::orderBy('id', 'asc')->paginate(10);
+        //$feeds = Feed::orderBy('id', 'asc')->paginate(10);
+    	if(isset($request->pagination)){
+            $feeds = Feed::orderBy('id', 'asc')->paginate($request->pagination);
+        }else{
+    	    $feeds = Feed::orderBy('id', 'asc')->paginate(10);
+    	}
         return view('index',compact('feeds', 'cats'))
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }

@@ -22,8 +22,16 @@
             </div>
         </div>
     </div>
-
-
+    {!! Form::open(['method' => 'GET', 'route' => 'feeds.index', 'role' => 'search', 'style'=>'display:inline']) !!}
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="form-group">
+            <strong>顯示</strong>
+            {!! Form::select('pagination', array('25' => '25', '50' => '50', '100' => '100')) !!}
+	    <strong>筆</strong>
+	    {!! Form::submit('送出', ['class' => 'btn btn-info', 'style'=>'font-size:14px']) !!}
+        </div>
+    </div>
+    {!! Form::close() !!}
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
@@ -73,5 +81,5 @@
     </table>
 
 
-    {!! $feeds->links() !!}
+    {!! $feeds->appends(request()->all())->links() !!}
 @endsection
