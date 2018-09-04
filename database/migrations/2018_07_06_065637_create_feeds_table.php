@@ -15,6 +15,7 @@ class CreateFeedsTable extends Migration
     {
         Schema::create('feeds', function (Blueprint $table) {
             $table->increments('id');
+	    $table->boolean('status');
             $table->string('title');
             $table->string('language')->nullable($value = true);
             $table->string('category');
