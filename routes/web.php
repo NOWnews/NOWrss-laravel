@@ -17,4 +17,4 @@ Route::get('/', function () {
 
 Route::get('/rss/{uuid}', 'RssController@index');
 
-Route::resource('feeds','FeedController');
+Route::resource('feeds', 'FeedController')->middleware('ipcheck');
