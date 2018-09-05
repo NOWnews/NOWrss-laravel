@@ -54,6 +54,19 @@ return [
             'engine' => null,
         ],
 
+	'wordpress' => [ // for WordPress database (used by Corcel)
+            'driver'    => 'mysql',
+            'host'      => env('WP_DB_HOST', '35.234.10.115'),
+            'database'  => env('WP_DB_DATABASE', 'NOWnews_Production'),
+            'username'  => env('WP_DB_DATABASE', 'NOWnews_Migrate'),
+            'password'  => env('WP_DB_PASSWORD', '6eH6f%t_jpSav3Xz'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => 'wp_',
+            'strict'    => false,
+            'engine'    => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),

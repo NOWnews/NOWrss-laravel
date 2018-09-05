@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Corcel\Model\Post;
 use Corcel\Model\User;
 use Corcel\Model\Taxonomy;
@@ -28,8 +29,12 @@ class RssController extends Controller
 	$sameCatNews = array();
 	$countNewsNum = null;
 	$sameCatNewsNum = '3';//same cat news you want +1
-
-	$Post_params = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['can_send_rss' => '1'])->take($sameCatNewsNum)->get();
+	$Post_params = Cache::get('postparams'.$category);
+        if (!$Post_params) {
+                $Post_params = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['can_send_rss' => '1'])->take($sameCatNewsNum)->get();
+                Cache::put('postparams'.$category, $Post_params, 5);
+        }
+	//$Post_params = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['can_send_rss' => '1'])->take($sameCatNewsNum)->get();
 	foreach($Post_params as $Post_param){
 	    if($PostId == $Post_param->ID || $sameCatNewsNum-1 == $countNewsNum){
 		continue;
@@ -53,19 +58,17 @@ class RssController extends Controller
     {
 	$cat_params = explode(",", $feed->category, -1);
         $cats = array();
-        $all_cats = Taxonomy::where('taxonomy', 'category')->get();
-        foreach($all_cats as $cat){
-            if(in_array($cat->term_id, $cat_params)){
-//                $catid = $cat->term_id;
-                $catSlug = $cat->term->slug;
-                $cats[] = $catSlug;
-            }else{
-                continue;
-//                $catid = $cat->parent;
-//                $catname = $cat->term->name;
-//                echo $catid.$catname." NOT A MOTHER CAT<br>";
-            }
-        }
+	$all_cats = Cache::get("allcats");
+	if (!$all_cats) {
+		$all_cats = Taxonomy::where('taxonomy', 'category')->get();
+        	Cache::put("allcats", $all_cats, 5);
+	}
+	$allCatId = $all_cats->mapWithKeys(function ($item) {
+		return [$item['term_id'] => $item->slug];
+	});
+	foreach($cat_params as $cat){
+		$cats[] = $allCatId[$cat];
+	}
         return $cats;
     }
 
@@ -179,8 +182,6 @@ class RssController extends Controller
 	    date_default_timezone_set('Etc/GMT-8');
 	    $UUID = $this->create_uuid();
 	    $milliseconds = (int)round(microtime(true) * 1000);
-	    $countNewsMutiple = 35;//cat >= 2
-            $countNewsSingle = 70;//cat = 1
 	    /*Set Feed Info End*/
 
 	    /**********************
@@ -188,15 +189,28 @@ class RssController extends Controller
 	     **********************/
 	    $Posts = collect();
 	    $catSlugs = $this->get_category($feed);
+	    $countNewsSingle = 30;//cat = 1
+	    $countNewsMutiple = $countNewsSingle / count($catSlugs);//cat >= 2
+
 	    if(count($catSlugs) > '1'){
 	        foreach ($catSlugs as $catSlug){
                     $category = Taxonomy::where('taxonomy', 'category')->slug($catSlug)->first();
-		    $Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get();
+		    $Posts_res = Cache::get('postsres'.$category);
+		    if (!$Posts_res) {
+                        $Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get(); 
+                        Cache::put('postsres'.$category, $Posts_res, 5);
+                    }
+		    //$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get();
 	            $Posts = $Posts->merge($Posts_res);
 	    	}
 	    }elseif(count($catSlugs) == '1'){
 		$category = Taxonomy::where('taxonomy', 'category')->slug($catSlugs)->first();
-		$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsSingle)->get();
+		$Posts_res = Cache::get('postsres'.$category);
+        	if (!$Posts_res) { 
+                	$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsSingle)->get();
+                	Cache::put('postsres'.$category, $Posts_res, 5);
+        	}
+		//$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsSingle)->get();
 		$Posts = $Posts_res;
 	    }
 	    //resort collection
@@ -204,6 +218,7 @@ class RssController extends Controller
                 return $Posts->ID;
             })->sortByDesc('post_date')->values(); 
 	    /*Get Feed Posts End*/
+
 
             /**************************
 	     *Convert Into Array Start*
@@ -233,7 +248,6 @@ class RssController extends Controller
                 return $res;
             });
 	    //dd($rssPosts);
-	    //dd('123');
 
 	    $rssPosts = array_slice(json_decode(json_encode($rssPosts), FALSE),0,60);
 	    /*Convert Into Array End*/
