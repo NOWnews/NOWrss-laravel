@@ -51,7 +51,7 @@
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="form-group">
             <strong>版型：</strong>
-            {!! Form::select('layout', array('DEFAULT' => '基本版型', 'YAHOO' => 'Yahoo 版型', 'LINE' => 'Line 版型', 'SINA' => '新浪版型', 'TAIWANMOBILE' => '台灣大哥大版型'), isset($feed->layout) ? $feed    ->layout  : null, array('class' => 'form-control')) !!}
+            {!! Form::select('layout', array('DEFAULT' => '基本版型', 'YAHOO' => 'Yahoo 版型', 'LINE' => 'Line 版型', 'LINEHK' => 'Line HK 版型', 'NEWTALK' => '新頭殼版型', 'SINA' => '新浪版型', 'TAIWANMOBILE' => '台灣大哥大版型'), isset($feed->layout) ? $feed    ->layout  : null, array('class' => 'form-control')) !!}
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12">
