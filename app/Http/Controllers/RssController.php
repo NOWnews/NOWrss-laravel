@@ -29,10 +29,10 @@ class RssController extends Controller
 	$sameCatNews = array();
 	$countNewsNum = null;
 	$sameCatNewsNum = '3';//same cat news you want +1
-	$Post_params = Cache::get('postparams'.$category);
+	$Post_params = Cache::get('postparams'.$PostId);
         if (!$Post_params) {
                 $Post_params = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['can_send_rss' => '1'])->take($sameCatNewsNum)->get();
-                Cache::put('postparams'.$category, $Post_params, 5);
+                Cache::put('postparams'.$PostId, $Post_params, 5);
         }
 	//$Post_params = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['can_send_rss' => '1'])->take($sameCatNewsNum)->get();
 	foreach($Post_params as $Post_param){
@@ -113,7 +113,10 @@ class RssController extends Controller
 
     public function parser_expert($PostContent, $FeedLanguage)
     {
-	$PostContent = mb_substr(preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $PostContent), 0, 150, 'utf8');
+	//$PostContent = mb_substr(preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $PostContent), 0, 150, 'utf8');
+	$PostContent = preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $PostContent);
+        $charLength = 150;
+        $PostContent = mb_strlen($PostContent, 'UTF-8') <= $charLength ? $PostContent : mb_substr($PostContent, 0,$charLength,'UTF-8') . '...';
 	if($FeedLanguage != 'traditional'){
 	    $PostContent = $this->convert_language($PostContent);
 	}
@@ -141,6 +144,11 @@ class RssController extends Controller
 		$PostContent = preg_replace($rep, '', $PostContent);
 	    }
 	}
+	$PostContent = str_replace("\r\n", '<br/>', $PostContent);
+	$PostContent = preg_replace('/\[caption(.*?)\]|\[\/caption\]/', '', $PostContent);
+	$PostContent = preg_replace('/\[embed\]/', '<iframe width="100%" height="auto" src="', $PostContent);
+        $PostContent = preg_replace('/watch\?v=/', 'embed/', $PostContent);
+        $PostContent = preg_replace('/\[\/embed\]/', '" frameborder="0" ></iframe>', $PostContent);
 	$PostContent = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $PostContent);
 	//dd($PostContent);
 	//dd($lan);
@@ -189,26 +197,26 @@ class RssController extends Controller
 	     **********************/
 	    $Posts = collect();
 	    $catSlugs = $this->get_category($feed);
-	    $countNewsSingle = 30;//cat = 1
+	    $countNewsSingle = 50;//cat = 1
 	    $countNewsMutiple = $countNewsSingle / count($catSlugs);//cat >= 2
 
 	    if(count($catSlugs) > '1'){
 	        foreach ($catSlugs as $catSlug){
                     $category = Taxonomy::where('taxonomy', 'category')->slug($catSlug)->first();
-		    $Posts_res = Cache::get('postsres'.$category);
+		    $Posts_res = Cache::get('postsresmut'.$category);
 		    if (!$Posts_res) {
                         $Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get(); 
-                        Cache::put('postsres'.$category, $Posts_res, 5);
+                        Cache::put('postsresmut'.$category, $Posts_res, 5);
                     }
 		    //$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get();
 	            $Posts = $Posts->merge($Posts_res);
 	    	}
 	    }elseif(count($catSlugs) == '1'){
 		$category = Taxonomy::where('taxonomy', 'category')->slug($catSlugs)->first();
-		$Posts_res = Cache::get('postsres'.$category);
+		$Posts_res = Cache::get('postsressin'.$category);
         	if (!$Posts_res) { 
                 	$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsSingle)->get();
-                	Cache::put('postsres'.$category, $Posts_res, 5);
+                	Cache::put('postsressin'.$category, $Posts_res, 5);
         	}
 		//$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsSingle)->get();
 		$Posts = $Posts_res;
@@ -228,7 +236,7 @@ class RssController extends Controller
 		$res = [
 		    'ID'               => $Posts->ID,
 		    //'author_own'     => User::find($Posts->post_author)->display_name,
-		    'author'           => $this->convert_param(Post::find($Posts->ID)->byline, $FeedLanguage),
+		    'author'           => $this->convert_param(preg_replace('/[\x00-\x1F\x7F-\x9F]/u', '', Post::find($Posts->ID)->byline), $FeedLanguage),
 		    'date'             => date_format($Posts->post_date, 'D d M Y H:i:s O'),
 		    //'content_p'      => $Posts->post_content,
 		    'content'          => $this->parser_content($Posts->post_content, $FeedLanguage),
@@ -249,7 +257,7 @@ class RssController extends Controller
             });
 	    //dd($rssPosts);
 
-	    $rssPosts = array_slice(json_decode(json_encode($rssPosts), FALSE),0,60);
+	    $rssPosts = array_slice(json_decode(json_encode($rssPosts), FALSE),0,30);
 	    /*Convert Into Array End*/
 
 	    //dd('123');
