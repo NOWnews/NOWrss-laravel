@@ -9,7 +9,7 @@
             <description>
                 <![CDATA[
                         @if ($rssPost->image)
-                        <div class="main-photo"><img src="{!! $rssPost->image->guid !!}" alt="{!! $rssPost->image->title !!}" /><cite>{!! $rssPost->image->title !!}</cite></div>
+                        <div class="main-photo"><img src="{!! $rssPost->image->guid !!}" alt="{!! $rssPost->image->title !!}" /><cite>{!! $rssPost->image->content !!}</cite></div>
                         @endif
 			%THISISAD%
                         {!! $rssPost->content !!}
