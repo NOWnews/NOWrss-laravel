@@ -19,7 +19,7 @@ class CreateFeedsTable extends Migration
             $table->string('title');
             $table->string('language')->nullable($value = true);
             $table->string('category');
-            $table->string('uuid');
+            $table->string('uuid')->unique();
             $table->string('layout')->nullable($value = true);
             $table->timestamps();
         });
