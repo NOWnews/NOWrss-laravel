@@ -13,9 +13,9 @@ use App\Feed;
 class RssController extends Controller
 {
     //
-    public function create_uuid()
+    public function create_uuid($posts_id)
     {
-        $str = md5(uniqid(mt_rand(), true));  
+        $str = md5($posts_id);  
         $UUID  = substr($str,0,8) . '-';  
         $UUID .= substr($str,8,4) . '-';  
         $UUID .= substr($str,12,4) . '-';  
@@ -194,7 +194,6 @@ class RssController extends Controller
 	     *Set Feed Info Start*
 	     *********************/
 	    date_default_timezone_set('Etc/GMT-8');
-	    $UUID = $this->create_uuid();
 	    $milliseconds = (int)round(microtime(true) * 1000);
 	    /*Set Feed Info End*/
 
@@ -232,6 +231,16 @@ class RssController extends Controller
                 return $Posts->ID;
             })->sortByDesc('post_date')->values(); 
 	    /*Get Feed Posts End*/
+
+	    /*****************************
+             *Create UUID For Feeds Start*
+             *****************************/
+            $posts_id = null;
+            foreach ($Posts as $post){
+                $posts_id .= $post->ID;
+            }
+            $UUID = $this->create_uuid($posts_id);
+            /*Create UUID For Feeds End*/
 
 
             /**************************
