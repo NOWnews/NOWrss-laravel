@@ -24,7 +24,7 @@ class RssController extends Controller
         return $UUID;
     }
 
-    public function get_sameCatNews($PostId, $category, $FeedLanguage)
+    public function get_sameCatNews($PostId, $category, $FeedParam)
     {
 	$sameCatNews = array();
 	$countNewsNum = null;
@@ -40,7 +40,7 @@ class RssController extends Controller
 		continue;
 	    }
 	    $countNewsNum++;
-	    if($FeedLanguage != 'traditional'){
+	    if($FeedParam['language'] != 'traditional'){
 		$PostTitle = $this->convert_language($Post_param->post_title);
 	    }else{
 		$PostTitle = $Post_param->post_title;
@@ -72,7 +72,7 @@ class RssController extends Controller
         return $cats;
     }
 
-    public function get_featuredImage($PostId, $FeedLanguage)
+    public function get_featuredImage($PostId, $FeedParam)
     {
 	$image = array();
 	$post_param = Post::find($PostId);
@@ -90,7 +90,7 @@ class RssController extends Controller
 	    }
 	//$image_param = Attachment::hasMeta(['can-send-by-rss' => '1'])->first();
 	    if($meta_value == '1'){
-		if($FeedLanguage != 'traditional'){
+		if($FeedParam['language'] != 'traditional'){
 		    $imageTitle = $this->convert_language($image_param->post_title);
 		    $imageContent = $this->convert_language($image_param->post_content);
 		}else{
@@ -111,19 +111,19 @@ class RssController extends Controller
 	return $image;
     }
 
-    public function parser_expert($PostContent, $FeedLanguage)
+    public function parser_expert($PostContent, $FeedParam)
     {
 	//$PostContent = mb_substr(preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $PostContent), 0, 150, 'utf8');
 	$PostContent = preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $PostContent);
         $charLength = 150;
         $PostContent = mb_strlen($PostContent, 'UTF-8') <= $charLength ? $PostContent : mb_substr($PostContent, 0,$charLength,'UTF-8') . '...';
-	if($FeedLanguage != 'traditional'){
+	if($FeedParam['language'] != 'traditional'){
 	    $PostContent = $this->convert_language($PostContent);
 	}
 	return $PostContent;
     }
 
-    public function parser_content($PostContent, $FeedLanguage)
+    public function parser_content($PostContent, $FeedParam)
     {
 	$image_param = array();
 	preg_match_all('#<img class(.*?)wp-image-(.[0-9]*)(.*?)\/>#is', $PostContent, $result);
@@ -155,10 +155,16 @@ class RssController extends Controller
         $PostContent = preg_replace('/\[sc name=\"drup\"(.*?)\]/', '<hr><p>※<a href="https://www.nownews.com/">【 NOWnews 今日新聞 】</a> 提醒您：<br />少一份毒品，多一分健康；吸毒一時，終身危害。<br />※ 戒毒諮詢專線：0800-770-885(0800-請請您-幫幫我)<br />※ 安心專線：0800-788-995(0800-請幫幫-救救我)<br />※ 張老師專線：1980<br />※ 生命線專線：1995</p>', $PostContent);
         $PostContent = preg_replace('/\[sc name=\"suicide\"(.*?)\]/', '<hr><p>※<a href="https://www.nownews.com/">【 NOWnews 今日新聞 】</a> 提醒您：<br />自殺不能解決問題，勇敢求救並非弱者，生命一定可以找到出路。<br />透過守門123步驟-1問2應3轉介，你我都可以成為自殺防治守門人。<br />※ 安心專線：0800-788-995(0800-請幫幫-救救我)<br />※ 張老師專線：1980<br />※ 生命線專線：1995</p>', $PostContent);
         $PostContent = preg_replace('/\[sc name=\"alcohol\"(.*?)\]/', '<hr><p>※<a href="https://www.nownews.com/">【 NOWnews 今日新聞 】</a>提醒您 酒後不開車，飲酒過量有礙健康！</p>', $PostContent);
-
+	if($FeedParam['layout'] == 'HINET'){
+		$PostContent = preg_replace('/width="(.*?)" height="(.*?)"/', '', $PostContent);
+	}
+	if($FeedParam['layout'] == 'YAHOO'){
+		$PostContent = str_replace('<br/>', '</p><p>', $PostContent);
+                $PostContent = '<p>'.$PostContent.'</p>';
+	}
 	//dd($PostContent);
 	//dd($lan);
-	if($FeedLanguage != 'traditional'){
+	if($FeedParam['language'] != 'traditional'){
             $PostContent = $this->convert_language($PostContent);
         }
 	return $PostContent;
@@ -172,9 +178,9 @@ class RssController extends Controller
 	return $ConvertParam;
     }
 
-    public function convert_param($PostParam, $FeedLanguage)
+    public function convert_param($PostParam, $FeedParam)
     {
-	if($FeedLanguage != 'traditional'){
+	if($FeedParam['language'] != 'traditional'){
 		$PostParam = $this->convert_language($PostParam);
 	}
 	return $PostParam;
@@ -184,12 +190,15 @@ class RssController extends Controller
     {
 	//select uuid and check layout_style
 	$feed = Feed::where(['uuid'=>$uuid])->first();
-	$FeedStatus = '';
+	$FeedParam = array();
+	$FeedParam['status'] = '';
 	if($feed){
-	    $FeedLanguage = $feed->language;
-            $FeedStatus = $feed->status;
+	    //$FeedLanguage = $feed->language;
+            $FeedParam['language'] = $feed->language;
+            $FeedParam['status'] = $feed->status;
+            $FeedParam['layout'] = $feed->layout;
 	}
-	if($FeedStatus == '1'){
+	if($FeedParam['status'] == '1'){
 	    /*********************
 	     *Set Feed Info Start*
 	     *********************/
@@ -247,26 +256,26 @@ class RssController extends Controller
 	     *Convert Into Array Start*
 	     **************************/
 	    $rssPosts = array();
-	    $rssPosts = $Posts->map(function ($Posts) use ($FeedLanguage) {
+	    $rssPosts = $Posts->map(function ($Posts) use ($FeedParam) {
 		$res = [
 		    'ID'               => $Posts->ID,
 		    //'author_own'     => User::find($Posts->post_author)->display_name,
-		    'author'           => $this->convert_param(preg_replace('/[\x00-\x1F\x7F-\x9F]/u', '', Post::find($Posts->ID)->byline), $FeedLanguage),
+		    'author'           => $this->convert_param(preg_replace('/[\x00-\x1F\x7F-\x9F]/u', '', Post::find($Posts->ID)->byline), $FeedParam),
 		    'date'             => date_format($Posts->post_date, 'D d M Y H:i:s O'),
 		    //'content_p'      => $Posts->post_content,
-		    'content'          => $this->parser_content($Posts->post_content, $FeedLanguage),
-		    'expert'           => $this->parser_expert($Posts->post_content, $FeedLanguage),
+		    'content'          => $this->parser_content($Posts->post_content, $FeedParam),
+		    'expert'           => $this->parser_expert($Posts->post_content, $FeedParam),
 		    //'expert1'        => mb_substr(preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $Posts->post_content), 0, 150, 'utf8'),
-		    'title'            => $this->convert_param($Posts->post_title, $FeedLanguage),
+		    'title'            => $this->convert_param($Posts->post_title, $FeedParam),
 		    'guid'             => $Posts->guid,
-		    'subcategory'      => $this->convert_param(Post::find($Posts->ID)->taxonomies->first()->term->name, $FeedLanguage),
-		    'image'            => $this->get_featuredImage($Posts->ID, $FeedLanguage),
+		    'subcategory'      => $this->convert_param(Post::find($Posts->ID)->taxonomies->first()->term->name, $FeedParam),
+		    'image'            => $this->get_featuredImage($Posts->ID, $FeedParam),
 		    'startYmdtUnix'    => strtotime($Posts->post_date) * 1000,
 		    'publishTimeUnix'  => strtotime($Posts->post_date) * 1000,
 		    'updateTimeUnix'   => strtotime($Posts->post_modified) * 1000,
 	            'UTCdate'          => date_format($Posts->post_date, 'D, d M Y H:i:s \G\M\TP'),
 		    'TaiwanMobileDate' => date_format($Posts->post_date, 'D M d Y H:i:s \G\M\TO'),
-		    'sameCatNews'      => $this->get_sameCatNews($Posts->ID, Post::find($Posts->ID)->taxonomies->first(), $FeedLanguage),
+		    'sameCatNews'      => $this->get_sameCatNews($Posts->ID, Post::find($Posts->ID)->taxonomies->first(), $FeedParam),
 		];
                 return $res;
             });
@@ -278,7 +287,7 @@ class RssController extends Controller
 	    //dd('123');
 
             return response()->view(strtolower($feed->layout), ['rssPosts'=>$rssPosts,'milliseconds'=>$milliseconds,'UUID'=>$UUID] )->header('Content-Type', 'text/xml');
-        }elseif($FeedStatus == '0'){
+        }elseif($FeedParam['status'] == '0'){
 	    return view('welcome')->with(['uuid'=>$uuid, 'errmsg'=>'此Rss已停用，請通知管理員']);
 	}else{
 	    return view('welcome')->with('uuid', $uuid);
