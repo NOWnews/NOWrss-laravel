@@ -34,7 +34,6 @@ class RssController extends Controller
                 $Post_params = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['can_send_rss' => '1'])->take($sameCatNewsNum)->get();
                 Cache::put('postparams'.$PostId, $Post_params, 5);
         }
-	//$Post_params = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['can_send_rss' => '1'])->take($sameCatNewsNum)->get();
 	foreach($Post_params as $Post_param){
 	    if($PostId == $Post_param->ID || $sameCatNewsNum-1 == $countNewsNum){
 		continue;
@@ -104,7 +103,6 @@ class RssController extends Controller
 		    continue;
 	        }
 	    }
-	//$image_param = Attachment::hasMeta(['can-send-by-rss' => '1'])->first();
 	    if($meta_value == '1'){
 		if($FeedParam['language'] != 'traditional'){
 		    $imageTitle = $this->convert_language($image_param->post_title);
@@ -129,7 +127,6 @@ class RssController extends Controller
 
     public function parser_expert($PostContent, $FeedParam)
     {
-	//$PostContent = mb_substr(preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $PostContent), 0, 150, 'utf8');
 	$PostContent = preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $PostContent);
         $charLength = 150;
         $PostContent = mb_strlen($PostContent, 'UTF-8') <= $charLength ? $PostContent : mb_substr($PostContent, 0,$charLength,'UTF-8') . '...';
@@ -272,13 +269,10 @@ class RssController extends Controller
 	    $rssPosts = $Posts->map(function ($Posts) use ($FeedParam) {
 		$res = [
 		    'ID'               => $Posts->ID,
-		    //'author_own'     => User::find($Posts->post_author)->display_name,
 		    'author'           => $this->convert_param(preg_replace('/[\x00-\x1F\x7F-\x9F]/u', '', Post::find($Posts->ID)->byline), $FeedParam),
 		    'date'             => date_format($Posts->post_date, 'D d M Y H:i:s O'),
-		    //'content_p'      => $Posts->post_content,
 		    'content'          => $this->parser_content($Posts->post_content, $FeedParam),
 		    'expert'           => $this->parser_expert($Posts->post_content, $FeedParam),
-		    //'expert1'        => mb_substr(preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $Posts->post_content), 0, 150, 'utf8'),
 		    'title'            => $this->convert_param($Posts->post_title, $FeedParam),
 		    'guid'             => $Posts->guid,
 		    'subcategory'      => $this->get_current_category(Post::find($Posts->ID)->taxonomies->where('taxonomy', 'category'), $FeedParam),
