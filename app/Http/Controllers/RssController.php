@@ -104,10 +104,10 @@ class RssController extends Controller
 	    }
 	    if($meta_value == '1'){
 		$imageTitle = $image_param->post_title;
-		if($post_param->_FSMCFIC_featured_image_caption){
+		if($post_param->_FSMCFIC_featured_image_caption && $post_param->_FSMCFIC_featured_image_caption != ""){
 		    $imageContent = $post_param->_FSMCFIC_featured_image_caption;
 		}else{
-		    $imageContent = $image_param->post_content;
+		    $imageContent = $image_param->post_excerpt;
 		}
 		if($FeedParam['language'] != 'traditional'){
 		    $imageTitle = $this->convert_language($imageTitle);
