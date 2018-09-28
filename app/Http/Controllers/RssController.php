@@ -97,19 +97,21 @@ class RssController extends Controller
 	    $meta_value = null;
 	    foreach ($metas as $meta){
 	        if($meta->meta_key == 'can-send-by-rss'){
-         	    $meta_key   = $meta->meta_key;
 		    $meta_value = $meta->meta_value;
 	        }else{
 		    continue;
 	        }
 	    }
 	    if($meta_value == '1'){
-		if($FeedParam['language'] != 'traditional'){
-		    $imageTitle = $this->convert_language($image_param->post_title);
-		    $imageContent = $this->convert_language($image_param->post_content);
+		$imageTitle = $image_param->post_title;
+		if($post_param->_FSMCFIC_featured_image_caption){
+		    $imageContent = $post_param->_FSMCFIC_featured_image_caption;
 		}else{
-		    $imageTitle = $image_param->post_title;
-                    $imageContent = $image_param->post_content;
+		    $imageContent = $image_param->post_content;
+		}
+		if($FeedParam['language'] != 'traditional'){
+		    $imageTitle = $this->convert_language($imageTitle);
+		    $imageContent = $this->convert_language($imageContent);
 		}
 	        $image = [
                     'ID'      => $image_param->ID,
@@ -145,7 +147,6 @@ class RssController extends Controller
 	    $meta_value = null;
 	    foreach ($metas as $meta){
                 if($meta->meta_key == 'can-send-by-rss'){
-                    $meta_key   = $meta->meta_key;
                     $meta_value = $meta->meta_value;
                 }else{
                     continue;
