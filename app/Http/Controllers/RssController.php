@@ -113,11 +113,14 @@ class RssController extends Controller
 		    $imageTitle = $this->convert_language($imageTitle);
 		    $imageContent = $this->convert_language($imageContent);
 		}
+		$imageGuid = $image_param->guid;
+                $imageGuid = preg_replace('/beta.nownews.com/', 'www.nownews.com', $imageGuid);
+                $imageGuid = preg_replace('/migrate.tmder.club/', 'www.nownews.com', $imageGuid);
 	        $image = [
                     'ID'      => $image_param->ID,
                     'title'   => $imageTitle,
 	            'content' => $imageContent,
-                    'guid'    => $image_param->guid,
+                    'guid'    => $imageGuid,
                 ];
  	    }
 	}
