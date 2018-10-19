@@ -255,16 +255,6 @@ class RssController extends Controller
             })->sortByDesc('post_date')->values(); 
 	    /*Get Feed Posts End*/
 
-	    /*****************************
-             *Create UUID For Feeds Start*
-             *****************************/
-            $posts_id = null;
-            foreach ($Posts as $post){
-                $posts_id .= $post->ID;
-            }
-            $UUID = $this->create_uuid($posts_id);
-            /*Create UUID For Feeds End*/
-
 
             /**************************
 	     *Convert Into Array Start*
@@ -294,6 +284,16 @@ class RssController extends Controller
 
 	    $rssPosts = array_slice(json_decode(json_encode($rssPosts), FALSE),0,30);
 	    /*Convert Into Array End*/
+
+	    /*****************************
+             *Create UUID For Feeds Start*
+             *****************************/
+            $posts_id = null;
+            foreach ($rssPosts as $rsspost){
+                $posts_id .= $rsspost->ID;
+            }
+            $UUID = $this->create_uuid($posts_id);
+            /*Create UUID For Feeds End*/
 
 	    //dd('123');
 
