@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('feeds.layout')
 
 
 @section('content')

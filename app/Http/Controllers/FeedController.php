@@ -53,13 +53,15 @@ class FeedController extends Controller
     {
         $cats = $this->get_category();
         //$feeds = Feed::orderBy('id', 'asc')->paginate(10);
-    	if(isset($request->pagination)){
-            $feeds = Feed::orderBy('id', 'asc')->paginate($request->pagination);
-        }else{
-    	    $feeds = Feed::orderBy('id', 'asc')->paginate(10);
-    	}
-        return view('feeds.index',compact('feeds', 'cats'))
-            ->with('i', (request()->input('page', 1) - 1) * 10);
+    	//if(isset($request->pagination)){
+        //    $feeds = Feed::orderBy('id', 'asc')->paginate($request->pagination);
+        //}else{
+    	//    $feeds = Feed::orderBy('id', 'asc')->paginate(10);
+    	//}
+        //return view('feeds.index',compact('feeds', 'cats'))
+        //    ->with('i', (request()->input('page', 1) - 1) * 10);
+	$feeds = Feed::all();
+        return view('feeds.home',compact('feeds', 'cats'));
     }
 
 

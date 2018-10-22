@@ -2,10 +2,16 @@
 <html>
 <head>
 	<title>Feeds 2018</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/dataTables.bootstrap4.min.css" />
+	@yield('stylesheets')
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	@yield('scripts')
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
 </head>
 <body>
 <style>
@@ -16,7 +22,7 @@
         max-width: 100%;
     }
     .container:after {
-        background-image: url(../../image/logo.png);
+        #background-image: url(../../image/logo.png);
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center top;
@@ -49,6 +55,6 @@
     </div>
     <strong>今日傳媒(股)公司版權所有，非經授權，不許轉載本網站內容 © 2018 </strong>
 </footer>
-
 </body>
 </html>
+
