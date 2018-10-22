@@ -58,7 +58,7 @@ class FeedController extends Controller
         }else{
     	    $feeds = Feed::orderBy('id', 'asc')->paginate(10);
     	}
-        return view('index',compact('feeds', 'cats'))
+        return view('feeds.index',compact('feeds', 'cats'))
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
@@ -71,7 +71,7 @@ class FeedController extends Controller
     public function create()
     {
 	$cats = $this->get_category();
-        return view('create',compact('cats'));
+        return view('feeds.create',compact('cats'));
     }
 
 
@@ -139,7 +139,7 @@ class FeedController extends Controller
     public function show($id)
     {
         $feed = Feed::find($id);
-        return view('show',compact('feed'));
+        return view('feeds.show',compact('feed'));
     }
 
 
@@ -154,7 +154,7 @@ class FeedController extends Controller
 	$cats = $this->get_category();
         $feed = Feed::find($id);
 	$cat_params = explode(",", $feed->category, -1);
-        return view('edit',compact('feed', 'cats', 'cat_params'));
+        return view('feeds.edit',compact('feed', 'cats', 'cat_params'));
     }
 
 
