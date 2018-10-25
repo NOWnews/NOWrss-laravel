@@ -44,6 +44,7 @@ class RssController extends Controller
 	    }else{
 		$PostTitle = $Post_param->post_title;
 	    }
+	    $PostTitle = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $PostTitle);
 	    $sameCatNews[] = [
 		'ID'    => $Post_param->ID,
 		'title' => $PostTitle,
@@ -162,6 +163,7 @@ class RssController extends Controller
 	    }
 	}
 	$PostContent = str_replace("\r\n", '<br/>', $PostContent);
+	$PostContent = preg_replace('/alt="(.*?)"/', '', $PostContent);
 	$PostContent = preg_replace('/\[caption(.*?)\]|\[\/caption\]/', '', $PostContent);
 	$PostContent = preg_replace('/\[embed\]/', '<iframe width="100%" height="auto" src="', $PostContent);
         $PostContent = preg_replace('/watch\?v=/', 'embed/', $PostContent);
@@ -267,7 +269,7 @@ class RssController extends Controller
 		    'date'             => date_format($Posts->post_date, 'D d M Y H:i:s O'),
 		    'content'          => $this->parser_content($Posts->post_content, $FeedParam),
 		    'expert'           => $this->parser_expert($Posts->post_content, $FeedParam),
-		    'title'            => $this->convert_param($Posts->post_title, $FeedParam),
+		    'title'            => $this->convert_param(preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $Posts->post_title), $FeedParam),
 		    'guid'             => $Posts->guid,
 		    'subcategory'      => $this->get_current_category(Post::find($Posts->ID)->taxonomies->where('taxonomy', 'category'), $FeedParam),
 		    'image'            => $this->get_featuredImage($Posts->ID, $FeedParam),
