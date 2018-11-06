@@ -15,7 +15,14 @@ class IpMiddleware
      */
     public function handle($request, Closure $next)
     {
-	if ($request->ip() != "61.219.7.80") {
+	$xForwardedFor = $request->header('x-forwarded-for');
+        if (empty($xForwardedFor)) {
+            $ip = $request->ip();
+        } else {
+            $ips = is_array($xForwardedFor) ? $xForwardedFor : explode(', ', $xForwardedFor);
+            $ip = $ips[0];
+        }
+	if ($ip != "61.219.7.80") {
         // here insted checking single ip address we can do collection of ip 
         //address in constant file and check with in_array function
             return redirect('https://www.nownews.com');
