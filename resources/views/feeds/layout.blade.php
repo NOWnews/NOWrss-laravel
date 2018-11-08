@@ -22,7 +22,7 @@
         max-width: 100%;
     }
     .container:after {
-        #background-image: url(../../image/logo.png);
+        background-image: url(../../image/logo.png);
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center top;

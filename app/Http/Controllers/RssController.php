@@ -174,7 +174,7 @@ class RssController extends Controller
         $PostContent = preg_replace('/\[sc name=\"drup\"(.*?)\]/', '<hr><p>※<a href="https://www.nownews.com/">【 NOWnews 今日新聞 】</a> 提醒您：<br />少一份毒品，多一分健康；吸毒一時，終身危害。<br />※ 戒毒諮詢專線：0800-770-885(0800-請請您-幫幫我)<br />※ 安心專線：0800-788-995(0800-請幫幫-救救我)<br />※ 張老師專線：1980<br />※ 生命線專線：1995</p>', $PostContent);
         $PostContent = preg_replace('/\[sc name=\"suicide\"(.*?)\]/', '<hr><p>※<a href="https://www.nownews.com/">【 NOWnews 今日新聞 】</a> 提醒您：<br />自殺不能解決問題，勇敢求救並非弱者，生命一定可以找到出路。<br />透過守門123步驟-1問2應3轉介，你我都可以成為自殺防治守門人。<br />※ 安心專線：0800-788-995(0800-請幫幫-救救我)<br />※ 張老師專線：1980<br />※ 生命線專線：1995</p>', $PostContent);
         $PostContent = preg_replace('/\[sc name=\"alcohol\"(.*?)\]/', '<hr><p>※<a href="https://www.nownews.com/">【 NOWnews 今日新聞 】</a>提醒您 酒後不開車，飲酒過量有礙健康！</p>', $PostContent);
-	if($FeedParam['layout'] == 'HINET'){
+	if($FeedParam['layout'] == 'HINET' || $FeedParam['layout'] == 'POLLSTER'){
 		$PostContent = preg_replace('/width="(.*?)" height="(.*?)"/', '', $PostContent);
 	}
 	if($FeedParam['layout'] == 'YAHOO'){
@@ -229,7 +229,7 @@ class RssController extends Controller
 	     *Get Feed Posts Start*
 	     **********************/
 	    $Posts = collect();
-	    $countNewsSingle = 50;//cat = 1
+	    $countNewsSingle = 30;//cat = 1
 	    $countNewsMutiple = $countNewsSingle / count($FeedParam['slug']);//cat >= 2
 
 	    if(count($FeedParam['slug']) > '1'){
