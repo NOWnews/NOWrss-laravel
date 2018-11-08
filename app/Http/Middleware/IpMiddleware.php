@@ -22,12 +22,11 @@ class IpMiddleware
             $ips = is_array($xForwardedFor) ? $xForwardedFor : explode(', ', $xForwardedFor);
             $ip = $ips[0];
         }
-	if ($ip != "61.219.7.80") {
+	if ($ip == "61.219.7.80" || $ip == "59.124.89.92") {
         // here insted checking single ip address we can do collection of ip 
         //address in constant file and check with in_array function
-            return redirect('https://www.nownews.com');
+	    return $next($request);
         }
-
-        return $next($request);
+	return redirect('https://www.nownews.com');
     }
 }
