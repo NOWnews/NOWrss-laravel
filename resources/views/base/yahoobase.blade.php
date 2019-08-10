@@ -8,8 +8,8 @@
         </image>
         <link>https://www.nownews.com</link>
         <language>zh-tw</language>
-        <pubDate>{{ date('D, d M Y H:i:s \G\M\TP') }}</pubDate>
-        <lastBuildDate>{{ date('D, d M Y H:i:s \G\M\TP') }}</lastBuildDate>
+        <pubDate>{{ date('D d M Y H:i:s O') }}</pubDate>
+        <lastBuildDate>{{ date('D d M Y H:i:s O') }}</lastBuildDate>
         <description>Latest news from www.nownews.com</description>
         <copyright>Copyright 2016, NOWnews Network Inc.</copyright>
         <ttl>6</ttl>

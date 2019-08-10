@@ -25,6 +25,7 @@
             </subcategory>
             <author>{{ $rssPost->author }}</author>
             <pubDate>{{ $rssPost->date }}</pubDate>
+	    <video> {{ $rssPost->videoLink }}</video>
         </item>
 @endforeach
 @endsection

@@ -18,3 +18,8 @@ Route::get('/', function () {
 Route::get('/rss/{uuid}', 'RssController@index');
 
 Route::resource('feeds', 'FeedController')->middleware('ipcheck');
+
+Route::get('/clear-cache', function() {
+	Artisan::call('cache:clear');
+	return "Cache is cleared";
+});

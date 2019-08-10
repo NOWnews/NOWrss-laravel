@@ -56,7 +56,7 @@ return [
 
 	'wordpress' => [ // for WordPress database (used by Corcel)
             'driver'    => 'mysql',
-            'host'      => env('WP_DB_HOST', '35.234.10.115'),
+            'host'      => env('WP_DB_HOST', '10.24.0.7'),
             'database'  => env('WP_DB_DATABASE', 'NOWnews_Production'),
             'username'  => env('WP_DB_DATABASE', 'NOWnews_Migrate'),
             'password'  => env('WP_DB_PASSWORD', '6eH6f%t_jpSav3Xz'),

@@ -24,15 +24,55 @@ class RssController extends Controller
         return $UUID;
     }
 
+    public function getYoutubeLink($PostId, $FeedParam) {
+	$startTime1 = time();
+
+	$post = Post::find($PostId);
+	$link = "";
+	if (!$post->meta->youtubeLink) {
+		$link = "";
+	}
+	else {
+		$link = $post->meta->youtubeLink;
+	}
+	
+	if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		echo "getYoutubeLink spend: ".(time() - $startTime1)."<br>\r\n";
+	}
+	return $link;
+    }
+
     public function get_sameCatNews($PostId, $category, $FeedParam)
     {
+	$startTime2 = time();
+
 	$sameCatNews = array();
 	$countNewsNum = null;
-	$sameCatNewsNum = '3';//same cat news you want +1
-	$Post_params = Cache::get('postparams'.$PostId);
-        if (!$Post_params) {
+	$sameCatNewsNum = '4';//same cat news you want +1
+	$Post_params = null;
+	if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		dump($category->term_id);
+		$Post_params = Cache::get('postparams'.$category->term_id);
+	}
+	else {
+//		$Post_params = Cache::get('postparams'.$PostId);
+		$Post_params = Cache::get('postparams'.$category->term_id);
+	}
+//	$Post_params = Cache::get('postparams'.$PostId);
+  
+	if (!$Post_params) {
+		if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+			echo "get_sameCatNews has no cache"."</br>\r\n";
+		}
+
                 $Post_params = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['can_send_rss' => '1'])->take($sameCatNewsNum)->get();
-                Cache::put('postparams'.$PostId, $Post_params, 5);
+                if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+			Cache::put('postparams'.$category->term_id, $Post_params, 5);
+		}
+		else {
+//			Cache::put('postparams'.$PostId, $Post_params, 5);
+			Cache::put('postparams'.$category->term_id, $Post_params, 5);
+		}
         }
 	foreach($Post_params as $Post_param){
 	    if($PostId == $Post_param->ID || $sameCatNewsNum-1 == $countNewsNum){
@@ -51,11 +91,137 @@ class RssController extends Controller
 		'guid'  => $Post_param->guid,
 	    ];
 	}
+	if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		echo $PostId." getSameCatNews part1 spend: ".(time() - $startTime2)."<br>\r\n";
+	}
+	$startTime3 = time();
+
+//	if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+//		$post = Post::find($PostId);
+//		$relatedTitle1 = $post->meta->relatedArticleTitle1;
+//		$relatedLink1 = $post->meta->relatedArticleLink1;
+//		if ($relatedTitle1 != "" && $relatedLink1 != "" && strpos($relatedLink1, "http") == 0) {
+//			$sameCatNews[0]['title'] = $relatedTitle1;
+//			$sameCatNews[0]['guid'] = $relatedLink1;
+//		}
+//		$relatedTitle2 = $post->meta->relatedArticleTitle2;
+//		$relatedLink2 = $post->meta->relatedArtitleLink2;
+//		if ($relatedTitle2 != "" && $relatedLink2 != "" && strpos($relatedLink2, "http") == 0) {
+//			$sameCatNews[1]['title'] = $relatedTitle2;
+//			$sameCatNews[1]['guid'] = $relatedLink2;
+//		}
+//		$relatedTitle3 = $post->meta->relatedArticleTitle3;
+//		$relatedLink3 = $post->meta->relatedArticleLink3;
+//		if ($relatedTitle3 != "" && $relatedLink3 != "" && strpos($relatedLink3, "http") == 0) {
+//			$sameCatNews[2]['title'] = $relatedTitle3;
+//			$sameCatNews[2]['guid'] = $relatedLink3;
+//		}
+//	}
+//	else {	
+		$post = Post::find($PostId);
+		$relatedTitle1 = $post->meta->relatedArticleTitle1;
+		$relatedLink1 = $post->meta->relatedArticleLink1;
+		if ($relatedTitle1 != "" && $relatedLink1 != "" && strpos($relatedLink1, 'http') === 0) {
+			if (strpos($relatedLink1, 'preview_id=') == true) {
+				$splitUrl1 = explode('preview_id=', $relatedLink1);
+				$sameCatNews[0]['ID'] = $splitUrl1[1];
+				$sameCatNews[0]['title'] = $relatedTitle1;
+				$sameCatNews[0]['guid'] = 'https://nownews.com/?p='.$splitUrl1[1];
+			}
+			else if (strpos($relatedLink1, 'game.nownews.com') == true) {
+				$splitUrl1 = explode('/', $relatedLink1);
+				$sameCatNews[0]['ID'] = $splitUrl1[5];
+				$sameCatNews[0]['title'] = $relatedTitle1;
+				$sameCatNews[0]['guid'] = $relatedLink1 . '?id=' . $splitUrl1[5];
+			}
+			else if (strpos($relatedLink1, 'action=edit') == true) {
+                                $splitUrl1 = explode('post=', $relatedLink1)[1];
+                                $sameCatNews[0]['ID'] = explode('&', $splitUrl1)[0];
+                                $sameCatNews[0]['title'] = $relatedTitle1;
+                                $sameCatNews[0]['guid'] = $relatedLink1 . '?id=' . $sameCatNews[0]['ID'];
+                        }
+			else {
+                                $splitUrl1 = explode('/', $relatedLink1);
+                                $sameCatNews[0]['ID'] = $splitUrl1[5];
+                                $sameCatNews[0]['title'] = $relatedTitle1;
+                                $sameCatNews[0]['guid'] = 'https://nownews.com/?p='.$splitUrl1[5];
+                        }
+		}
+		$relatedTitle2 = $post->meta->relatedArticleTitle2;
+		$relatedLink2 = $post->meta->relatedArticleLink2;
+		if ($relatedTitle2 != "" && $relatedLink2 != "" && strpos($relatedLink2, 'http') === 0) {
+			if (strpos($relatedLink2, 'preview_id=') == true) {
+                                $splitUrl2 = explode('preview_id=', $relatedLink2);
+                                $sameCatNews[1]['ID'] = $splitUrl2[1];
+                                $sameCatNews[1]['title'] = $relatedTitle2;
+                                $sameCatNews[1]['guid'] = 'https://nownews.com/?p='.$splitUrl2[1];
+                        }
+			else if (strpos($relatedLink2, 'game.nownews.com') == true) {
+                                $splitUrl2 = explode('/', $relatedLink2);
+                                $sameCatNews[1]['ID'] = $splitUrl2[5];
+                                $sameCatNews[1]['title'] = $relatedTitle2;
+                                $sameCatNews[1]['guid'] = $relatedLink2 . '?id=' . $splitUrl2[5];
+                        }
+			else if (strpos($relatedLink2, 'action=edit') == true) {
+                                $splitUrl2 = explode('post=', $relatedLink2)[1];
+                                $sameCatNews[1]['ID'] = explode('&', $splitUrl2)[0];
+                                $sameCatNews[1]['title'] = $relatedTitle2;
+                                $sameCatNews[1]['guid'] = $relatedLink2 . '?id=' . $sameCatNews[1]['ID'];
+                        }
+                        else {
+                                $splitUrl2 = explode('/', $relatedLink2);
+                                $sameCatNews[1]['ID'] = $splitUrl2[5];
+                                $sameCatNews[1]['title'] = $relatedTitle2;
+                                $sameCatNews[1]['guid'] = 'https://nownews.com/?p='.$splitUrl2[5];
+                        }
+                }
+		$relatedTitle3 = $post->meta->relatedArticleTitle3;
+		$relatedLink3 = $post->meta->relatedArticleLink3;
+		if ($relatedTitle3 != "" && $relatedLink3 != "" && strpos($relatedLink3, 'http') === 0) {
+			if (strpos($relatedLink3, 'preview_id=') == true) {
+				$splitUrl3 = explode('preview_id=', $relatedLink3);
+				$sameCatNews[2]['ID'] = $splitUrl3[1];
+				$sameCatNews[2]['title'] = $relatedTitle3;
+				$sameCatNews[2]['guid'] = 'https://nownews.com/?p='.$splitUrl3[1];
+			}
+			else if (strpos($relatedLink3, 'game.nownews.com') == true) {
+                                $splitUrl3 = explode('/', $relatedLink3);
+                                $sameCatNews[2]['ID'] = $splitUrl3[5];
+                                $sameCatNews[2]['title'] = $relatedTitle3;
+                                $sameCatNews[2]['guid'] = $relatedLink3 . '?id=' . $splitUrl3[5];
+                        }
+			else if (strpos($relatedLink3, 'action=edit') == true) {
+                                $splitUrl3 = explode('post=', $relatedLink3)[1];
+                                $sameCatNews[2]['ID'] = explode('&', $splitUrl3)[0];
+                                $sameCatNews[2]['title'] = $relatedTitle3;
+                                $sameCatNews[2]['guid'] = $relatedLink3 . '?id=' . $sameCatNews[2]['ID'];
+                        }
+			else {
+                        	$splitUrl3 = explode('/', $relatedLink3);
+				$sameCatNews[2]['ID'] = $splitUrl3[5];
+                        	$sameCatNews[2]['title'] = $relatedTitle3;
+                        	$sameCatNews[2]['guid'] = 'https://nownews.com/?p='.$splitUrl3[5];
+			}
+                }
+//	}
+
+	if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		echo $PostId. " getSameCatNews part2 spend: ".(time() - $startTime3)."<br>\r\n";
+//		dump($sameCatNews);
+	}
+
         return json_decode(json_encode($sameCatNews), FALSE);
     }
 
     public function get_category($feed)
     {
+	$startTime3 = time();
+
+	$category = $feed->category;
+	$escapes = array("124251,", "141,", "48,", "10,");
+	$replacements = array("", "", "", "");
+	$category = str_replace($escapes, $replacements, $category);
+	$feed->category = $category;
 	$cat_params = explode(",", $feed->category, -1);
         $cats = array();
 	$all_cats = Cache::get("allcats");
@@ -69,15 +235,22 @@ class RssController extends Controller
 	foreach($cat_params as $cat){
 		$cats[] = $allCatId[$cat];
 	}
+
+	if ($feed['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		echo "get_category spend: ".(time() - $startTime3)."<br>\r\n";
+	}
+
         return $cats;
     }
 
     public function get_current_category($PostCats, $FeedParam)
     {
+	$startTime4 = time();
+
 	$postCat = null;
         foreach ($PostCats as $PostCat) {
             if (in_array($PostCat->term->slug, $FeedParam['slug'])){
-                $postCat = $PostCat->term->name;
+		$postCat = $PostCat->term->name;
             }else{
                 $postCat .= '';
             }
@@ -85,11 +258,17 @@ class RssController extends Controller
         if($FeedParam['language'] != 'traditional'){
             $postCat = $this->convert_language($postCat);
         }
+	if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		echo "get_current_category spend: ".(time()-$startTime4)."<br>\r\n";
+	}
+
         return $postCat;
     }
 
     public function get_featuredImage($PostId, $FeedParam)
     {
+	$startTime5 = time();
+
 	$image = array();
 	$post_param = Post::find($PostId);
 	if (!empty($post_param->thumbnail->attachment)){
@@ -105,6 +284,7 @@ class RssController extends Controller
 	    }
 	    if($meta_value == '1'){
 		$imageTitle = $image_param->post_title;
+		$imageTitle = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $imageTitle);
 		if($post_param->_FSMCFIC_featured_image_caption && $post_param->_FSMCFIC_featured_image_caption != ""){
 		    $imageContent = $post_param->_FSMCFIC_featured_image_caption;
 		}else{
@@ -114,9 +294,11 @@ class RssController extends Controller
 		    $imageTitle = $this->convert_language($imageTitle);
 		    $imageContent = $this->convert_language($imageContent);
 		}
+		$imageContent = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $imageContent);
 		$imageGuid = $image_param->guid;
                 $imageGuid = preg_replace('/beta.nownews.com/', 'www.nownews.com', $imageGuid);
                 $imageGuid = preg_replace('/migrate.tmder.club/', 'www.nownews.com', $imageGuid);
+		$imageGuid = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $imageGuid);
 	        $image = [
                     'ID'      => $image_param->ID,
                     'title'   => $imageTitle,
@@ -127,26 +309,50 @@ class RssController extends Controller
 	}
 	//dd($metas);
         //dd($image);
+	if ($FeedParam['uuid'] == 'A89FE992-76D5-72F1-21F9-CD622EA397E7') {
+		echo "get_featuredImage spend: ".(time()-$startTime5)."<br>\r\n";
+	}
 
 	return $image;
     }
 
     public function parser_expert($PostContent, $FeedParam)
     {
+	$startTime6 = time();
+
 	$PostContent = preg_replace('#\[(.*?)\](.*?)\[(.*?)\]|<(.*?)>#is', '', $PostContent);
+	$escapes = array("\x08");
+	$replacements = array("\\f");
+	$PostContent = str_replace($escapes, $replacements, $PostContent);
         $charLength = 150;
         $PostContent = mb_strlen($PostContent, 'UTF-8') <= $charLength ? $PostContent : mb_substr($PostContent, 0,$charLength,'UTF-8') . '...';
 	if($FeedParam['language'] != 'traditional'){
 	    $PostContent = $this->convert_language($PostContent);
 	}
+	$PostContent = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $PostContent);
+	if ($FeedParam['uuid'] == 'A89FE992-76D5-72F1-21F9-CD622EA397E7') {
+		//dump($PostContent);
+	}
+	if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		echo "parser_expert spend: ".(time()-$startTime6)."<br>\r\n";
+	}
+
 	return $PostContent;
     }
 
+    //public function appendImageBeforeDescription($Post) {
+//	$Post->dump();
+  //  }
+
     public function parser_content($PostContent, $FeedParam)
     {
+	$startTime7 = time();
+
 	$image_param = array();
 	preg_match_all('#<img class(.*?)wp-image-(.[0-9]*)(.*?)\/>#is', $PostContent, $result);
 	foreach($result[2] as $res){
+	    if (!Attachment::find($res))
+	        return ;
 	    $metas = Attachment::find($res)->meta;
 	    $meta_value = null;
 	    foreach ($metas as $meta){
@@ -163,13 +369,19 @@ class RssController extends Controller
 	    }
 	}
 	$PostContent = str_replace("\r\n", '<br/>', $PostContent);
+	if ($FeedParam['uuid'] == '5C8E8AFD-0B71-4C2E-B2B8-CCA5E7E8FE6F') {
+		$PostContent = str_replace('<br/>', '<p>', $PostContent);
+	}
+	$PostContent = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $PostContent);
+	$escapes = array("\x08");
+	$replacements = array("\\f");
+	$PostContent = str_replace($escapes, $replacements, $PostContent);
 	$PostContent = preg_replace('/alt="(.*?)"/', '', $PostContent);
 	$PostContent = preg_replace('/\[caption(.*?)\]|\[\/caption\]/', '', $PostContent);
 	$PostContent = preg_replace('/\[embed\]/', '<iframe width="100%" height="auto" src="', $PostContent);
         $PostContent = preg_replace('/watch\?v=/', 'embed/', $PostContent);
         $PostContent = preg_replace('/\[\/embed\]/', '" frameborder="0" ></iframe>', $PostContent);
 	$PostContent = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $PostContent);
-
         $PostContent = preg_replace('/\[sc name=\"smoke\"(.*?)\]/', '<hr><p>※<a href="https://www.nownews.com/">【 NOWnews 今日新聞 】</a>提醒您 吸菸會導致肺癌、心臟血管疾病，未滿18歲不得吸菸！</p>', $PostContent);
         $PostContent = preg_replace('/\[sc name=\"drup\"(.*?)\]/', '<hr><p>※<a href="https://www.nownews.com/">【 NOWnews 今日新聞 】</a> 提醒您：<br />少一份毒品，多一分健康；吸毒一時，終身危害。<br />※ 戒毒諮詢專線：0800-770-885(0800-請請您-幫幫我)<br />※ 安心專線：0800-788-995(0800-請幫幫-救救我)<br />※ 張老師專線：1980<br />※ 生命線專線：1995</p>', $PostContent);
         $PostContent = preg_replace('/\[sc name=\"suicide\"(.*?)\]/', '<hr><p>※<a href="https://www.nownews.com/">【 NOWnews 今日新聞 】</a> 提醒您：<br />自殺不能解決問題，勇敢求救並非弱者，生命一定可以找到出路。<br />透過守門123步驟-1問2應3轉介，你我都可以成為自殺防治守門人。<br />※ 安心專線：0800-788-995(0800-請幫幫-救救我)<br />※ 張老師專線：1980<br />※ 生命線專線：1995</p>', $PostContent);
@@ -186,6 +398,24 @@ class RssController extends Controller
 	if($FeedParam['language'] != 'traditional'){
             $PostContent = $this->convert_language($PostContent);
         }
+
+	if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		$pattern = "/<p(>|\s+[^>]*>)<img.*?<\/p>/i";
+//		preg_match_all( '/^<p>(<img[^>]+>)(.)<\/p>$/i' , $PostContent, $match );
+//		preg_match_all( '/(<p(>|\s+[^>]*>)<img.*?<\/p>)/', $PostContent, $match);
+		preg_match_all($pattern, $PostContent, $match);
+		//$src = array_pop($match);
+		//print_r($src);
+		foreach($match as $value) {
+		//	dump($value);
+			//$targetImg = '<p>' . $value;
+			//dump($targetImg);
+			//str_replace($targetImg, $value, $PostContent);
+		}
+		echo "parser_content spend: ".(time()-$startTime7);
+//		dump($PostContent);
+	}
+	
 	return $PostContent;
     }
 
@@ -199,19 +429,31 @@ class RssController extends Controller
 
     public function convert_param($PostParam, $FeedParam)
     {
+	$startTime8 = time();
+
 	if($FeedParam['language'] != 'traditional'){
 		$PostParam = $this->convert_language($PostParam);
 	}
+	$PostParam = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $PostParam);
+	
+	if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		echo "convert_param spend: ".(time()-$startTime8)."<br>\r\n";
+//		dump($PostParam);
+	}
+
 	return $PostParam;
     }
 
     public function index($uuid)
     {
+	$rn = "</br>\r\n";
+	$startTime9 = time();
 	//select uuid and check layout_style
 	$feed = Feed::where(['uuid'=>$uuid])->first();
 	$FeedParam = array();
 	$FeedParam['status'] = '';
 	if($feed){
+	    $FeedParam['uuid'] = $uuid;
             $FeedParam['language'] = $feed->language;
             $FeedParam['status'] = $feed->status;
             $FeedParam['layout'] = $feed->layout;
@@ -233,36 +475,91 @@ class RssController extends Controller
 	    $countNewsMutiple = $countNewsSingle / count($FeedParam['slug']);//cat >= 2
 
 	    if(count($FeedParam['slug']) > '1'){
+		if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+			echo "slug > 1".$rn;
+		} 
 	        foreach ($FeedParam['slug'] as $catSlug){
+			if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+				echo "--category: ".$catSlug.$rn;
+			}
+
                     $category = Taxonomy::where('taxonomy', 'category')->slug($catSlug)->first();
-		    $Posts_res = Cache::get('postsresmut'.$category);
-		    if (!$Posts_res) {
-                        $Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get(); 
-                        Cache::put('postsresmut'.$category, $Posts_res, 5);
-                    }
+
+			if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+				echo "===category: ".$category.$rn;
+			}
+		    //$Posts_res = Cache::get('postsresmut'.$category);
+		    //if (!$Posts_res) {
+//                        $Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get(); 
+                       // Cache::put('postsresmut'.$category, $Posts_res, 5);
+                    //}
+
+
+			if (Cache::has('postsresmut'.$category)) {
+				if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+					echo "has cache".$rn;
+				}
+				$Posts_res = Cache::get('postsresmut'.$category);			
+			}
+			else {
+				if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+					echo "has no cache".$rn;
+				}
+				$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get();
+				Cache::add('postsresmut'.$category, $Posts_res, 5);
+			}
 	            $Posts = $Posts->merge($Posts_res);
 	    	}
 	    }elseif(count($FeedParam['slug']) == '1'){
+		if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+			echo "slug == 1".$rn;
+		}
+
 		$category = Taxonomy::where('taxonomy', 'category')->slug($FeedParam['slug'])->first();
-		$Posts_res = Cache::get('postsressin'.$category);
-        	if (!$Posts_res) { 
-                	$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsSingle)->get();
-                	Cache::put('postsressin'.$category, $Posts_res, 5);
-        	}
+
+
+		//$Posts_res = Cache::get('postsressin'.$category);
+        	//if (!$Posts_res) { 
+//                	$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsSingle)->get();
+                //	Cache::put('postsressin'.$category, $Posts_res, 5);
+        	//}
+		
+
+			if (Cache::has('postsressin'.$category)) {
+				if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+					echo "has cache".$rn;
+				}
+				$Posts_res = Cache::get('postsressin'.$category);
+			}
+			else {
+				if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+					echo "has no cache".$rn;
+				}
+				$Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsSingle)->get();
+				Cache::add('postsressin'.$category, $Posts_res, 5);
+			}
 		$Posts = $Posts_res;
 	    }
+
+	if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		echo "get Posts spend: ".(time()-$startTime9)."</br>\r\n";
+	}
+
 	    //resort collection
 	    $Posts = $Posts->unique(function ($Posts) {
                 return $Posts->ID;
-            })->sortByDesc('post_date')->values(); 
+            })->sortByDesc('post_date')->values();
 	    /*Get Feed Posts End*/
 
-
+	if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+//		dump($Posts);
+	}
             /**************************
 	     *Convert Into Array Start*
 	     **************************/
 	    $rssPosts = array();
 	    $rssPosts = $Posts->map(function ($Posts) use ($FeedParam) {
+		$startTime = time();
 		$res = [
 		    'ID'               => $Posts->ID,
 		    'author'           => $this->convert_param(preg_replace('/[\x00-\x1F\x7F-\x9F]/u', '', Post::find($Posts->ID)->byline), $FeedParam),
@@ -279,12 +576,57 @@ class RssController extends Controller
 	            'UTCdate'          => date_format($Posts->post_date, 'D, d M Y H:i:s \G\M\TP'),
 		    'TaiwanMobileDate' => date_format($Posts->post_date, 'D M d Y H:i:s \G\M\TO'),
 		    'sameCatNews'      => $this->get_sameCatNews($Posts->ID, Post::find($Posts->ID)->taxonomies->first(), $FeedParam),
+		    'videoLink'        => $this->getYoutubeLink($Posts->ID, $FeedParam),
 		];
+		$endTime = time();
+		if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+			echo "map array total spend: ".(time() - $startTime)."</br>\r\n";
+		}
                 return $res;
             });
-	    //dd($rssPosts);
+//	    dd($rssPosts);
+	//This site will filter the posts before 2018/10/01
+	if($uuid == "692AEC15-5C02-F284-59B5-42CE31878B71"){
+		$filterRssPosts = array();
+		$filterRssPosts = $rssPosts->filter(function ($filterPost) {
+			return data_get($filterPost, "publishTimeUnix") > 1538352000000;	
+		});
+		$rssPosts = $filterRssPosts->all();
+	}
+	else if ($uuid == '9B3A422A-1605-086A-1292-6A56B8F671C1') {
+		//dump($rssPosts);
+	}
+	else if ($uuid == "FAB52423-E1AA-B444-2850-D19331C6C14B") { //Newtalks
+//		$filterRssPosts = array();
+//		$filterRssPosts = $rssPosts->map(function ($item, $key) {
+//			if ($item['image']) {
+//				$item['content'] = $item['image']['guid'] . ' ' . $item['image']['content'] . ' ' . $item['content'];
+//			}
+//			return $item;
+//		});
+//		$rssPosts = $filterRssPosts->all();
+	}
+	else if ($uuid == 'A89FE992-76D5-72F1-21F9-CD622EA397E7') {
+//		$filterRssPosts = array();
+//		$filterRssPosts = $rssPosts->filter(function ($filterPost) {
+//			return !str_contains(data_get($filterPost, "content"), "圖／美聯社／達志影像");
+//		})->values();
+//		$rssPosts = $filterRssPosts->all();
 
-	    $rssPosts = array_slice(json_decode(json_encode($rssPosts), FALSE),0,30);
+//		$rssPosts->dump();
+
+		$filterRssPosts = array();
+		$filterRssPosts = $rssPosts->map(function ($item, $key) {
+			if ($item['image']) {
+				$item['content'] = '<p><img src="' . $item['image']['guid'] . '" alt="' . $item['image']['title'] . '"</br>' . $item['content'];
+			}
+//			dump($item);
+			return $item;
+		});
+
+		$rssPosts = $filterRssPosts->all();
+	}
+	$rssPosts = array_slice(json_decode(json_encode($rssPosts), FALSE),0,30);
 	    /*Convert Into Array End*/
 
 	    /*****************************
@@ -296,8 +638,12 @@ class RssController extends Controller
             }
             $UUID = $this->create_uuid($posts_id);
             /*Create UUID For Feeds End*/
-
 	    //dd('123');
+
+	if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+		dump($rssPosts);
+		echo "index spend: ".(time()-$startTime9)."<br>\r\n";
+	}
 
             return response()->view(strtolower($feed->layout), ['rssPosts'=>$rssPosts,'milliseconds'=>$milliseconds,'UUID'=>$UUID] )->header('Content-Type', 'text/xml');
         }elseif($FeedParam['status'] == '0'){
