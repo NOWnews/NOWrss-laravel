@@ -21,7 +21,7 @@
                     </div> @endif {!! $rssPost->content !!}
                 @if ($rssPost->sameCatNews)
                     <div>
-                        <p class="read-more-vendor"><span>更多 今日新聞 報導</span>
+                        <p class="read-more-vendor"><span>{{ $rssPost->readMoreVendor }}</span>
                             @foreach ($rssPost->sameCatNews as $News)
                                 <br/>
                                 <a href="{!! $News->guid !!}&amp;from=Yahoo&amp;utm_source=NaturalLink&amp;utm_medium=Yahoo&amp;utm_campaign={{ date('Ymd') }}">{{ $News->title }}</a>

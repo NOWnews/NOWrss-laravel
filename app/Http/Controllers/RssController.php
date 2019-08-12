@@ -564,7 +564,14 @@ class RssController extends Controller
                     'TaiwanMobileDate' => date_format($Posts->post_date, 'D M d Y H:i:s \G\M\TO'),
                     'sameCatNews' => $this->get_sameCatNews($Posts->ID, Post::find($Posts->ID)->taxonomies->first(), $FeedParam),
                     'videoLink' => $this->getYoutubeLink($Posts->ID, $FeedParam),
+                    'readMoreVendor' => '更多 今日新聞 報導',
                 ];
+
+                // rewrite readMoreVendor if Yahoo_TW
+                if ($FeedParam['uuid'] === '53F317D5-3B3A-4487-9505-CA526A9D54B8') {
+                    $res['readMoreVendor'] = '更多 NOWnews 今日新聞 報導';
+                }
+
                 $endTime = time();
                 if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
                     echo "map array total spend: " . (time() - $startTime) . "</br>\r\n";
