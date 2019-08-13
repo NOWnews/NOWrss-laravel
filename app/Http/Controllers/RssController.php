@@ -382,6 +382,19 @@ class RssController extends Controller
             $PostContent = str_replace('<br/>', '</p><p>', $PostContent);
             $PostContent = '<p>' . $PostContent . '</p>';
         }
+
+        // remove p tag around img tag when RSS feed IAFB category
+        if ($FeedParam['uuid'] === 'EDCEEEA8-EE6B-EC19-C0F1-334253A36D45') {
+            $pattern = '/<p><img.*?[^\>]+>/';
+            preg_match($pattern, $PostContent, $maches);
+
+            if (!empty($maches)) {
+                $element = str_replace('<p>', '', $maches[0]);
+                $element = "{$element}<p>";
+                $PostContent = preg_replace($pattern, $element, $PostContent);
+            }
+        }
+
         //dd($PostContent);
         //dd($lan);
         if ($FeedParam['language'] != 'traditional') {
