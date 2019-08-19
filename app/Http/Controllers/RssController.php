@@ -418,6 +418,9 @@ class RssController extends Controller
 //		dump($PostContent);
         }
 
+        // remove specify string in content
+        $PostContent = str_replace('&feature=youtu.be', '', $PostContent);
+
         return $PostContent;
     }
 
