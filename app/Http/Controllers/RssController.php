@@ -419,6 +419,7 @@ class RssController extends Controller
         }
 
         // remove specify string in content
+        $PostContent = str_replace('&amp;', '&', $PostContent);
         $PostContent = str_replace('&feature=youtu.be', '', $PostContent);
 
         return $PostContent;
