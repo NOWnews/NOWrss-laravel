@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+  nginx:
+    build: ./build/nginx
+    ports:
+      - "80:80"
+    links:
+    - php72_fpm
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - VIRTUAL_HOST=dev.feed.nownews
+
+  php72_fpm:
+    build: ./build/php72
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./:/var/www/html
+    links:
+      - redis
+
+  cloudsql-proxy-app:
+    image: gcr.io/cloudsql-docker/gce-proxy:1.12
+    ports:
+      - "3306:3306"
+      - "3307:3307"
+    volumes:
+      - ./build/mysql/nownews-service-account.json:/config:cached
+    command:
+      - "/cloud_sql_proxy"
+      - "-instances"
+      - "nownews-website-199408:asia-east1:nownews-apps=tcp:0.0.0.0:3306,nownews-website-199408:asia-east1:nownews-website-test-20190720=tcp:0.0.0.0:3307"
+      - "-credential_file"
+      - "/config"
+
+  redis:
+    build: ./build/redis
+    ports:
+      - "6379:6379"
