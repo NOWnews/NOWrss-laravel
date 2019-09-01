@@ -141,6 +141,8 @@ class RssController extends Controller
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[5];
             }
+
+            $sameCatNews[0]['relatedLink'] = $relatedLink1;
         }
         $relatedTitle2 = $post->meta->relatedArticleTitle2;
         $relatedLink2 = $post->meta->relatedArticleLink2;
@@ -166,6 +168,8 @@ class RssController extends Controller
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[5];
             }
+
+            $sameCatNews[1]['relatedLink'] = $relatedLink2;
         }
         $relatedTitle3 = $post->meta->relatedArticleTitle3;
         $relatedLink3 = $post->meta->relatedArticleLink3;
@@ -191,8 +195,21 @@ class RssController extends Controller
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[5];
             }
+
+            $sameCatNews[2]['relatedLink'] = $relatedLink3;
         }
 //	}
+
+        // remove items which relatedLink is not under nownews website
+        $sameCatNews = collect($sameCatNews)
+            ->filter(function ($item) {
+                return (bool)preg_match('/^https:\/\/www\.nownews\.com(\/.*$|$)/', $item['relatedLink']);
+            })
+            ->map(function ($item) {
+                unset($item['relatedLink']);
+                return $item;
+            })
+            ->toArray();
 
         if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
             echo $PostId . " getSameCatNews part2 spend: " . (time() - $startTime3) . "<br>\r\n";
