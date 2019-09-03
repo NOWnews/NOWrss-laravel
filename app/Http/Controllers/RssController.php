@@ -203,7 +203,7 @@ class RssController extends Controller
         // remove items which relatedLink is not under nownews website
         $sameCatNews = collect($sameCatNews)
             ->filter(function ($item) {
-                return (bool)preg_match('/^https:\/\/www\.nownews\.com(\/.*$|$)/', $item['relatedLink']);
+                return (bool)preg_match('/^https:\/\/(www|game)\.nownews\.com(\/.*$|$)/', $item['relatedLink']);
             })
             ->map(function ($item) {
                 unset($item['relatedLink']);
