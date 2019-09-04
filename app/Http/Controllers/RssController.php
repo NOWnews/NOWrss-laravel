@@ -137,7 +137,7 @@ class RssController extends Controller
                 $sameCatNews[0]['guid'] = $relatedLink1 . '?id=' . $sameCatNews[0]['ID'];
             } else {
                 $splitUrl1 = explode('/', $relatedLink1);
-                $sameCatNews[0]['ID'] = $splitUrl1[5];
+                $sameCatNews[0]['ID'] = $splitUrl1[5] ?? null;
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[5];
             }
@@ -164,7 +164,7 @@ class RssController extends Controller
                 $sameCatNews[1]['guid'] = $relatedLink2 . '?id=' . $sameCatNews[1]['ID'];
             } else {
                 $splitUrl2 = explode('/', $relatedLink2);
-                $sameCatNews[1]['ID'] = $splitUrl2[5];
+                $sameCatNews[1]['ID'] = $splitUrl2[5] ?? null;
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[5];
             }
@@ -191,7 +191,7 @@ class RssController extends Controller
                 $sameCatNews[2]['guid'] = $relatedLink3 . '?id=' . $sameCatNews[2]['ID'];
             } else {
                 $splitUrl3 = explode('/', $relatedLink3);
-                $sameCatNews[2]['ID'] = $splitUrl3[5];
+                $sameCatNews[2]['ID'] = $splitUrl3[5] ?? null;
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[5];
             }
@@ -203,7 +203,7 @@ class RssController extends Controller
         // remove items which relatedLink is not under nownews website
         $sameCatNews = collect($sameCatNews)
             ->filter(function ($item) {
-                return (bool)preg_match('/^https:\/\/www\.nownews\.com(\/.*$|$)/', $item['relatedLink']);
+                return (bool)preg_match('/^https:\/\/(www|game)\.nownews\.com(\/.*$|$)/', $item['relatedLink']);
             })
             ->map(function ($item) {
                 unset($item['relatedLink']);
