@@ -125,24 +125,30 @@ class RssController extends Controller
                 $sameCatNews[0]['ID'] = $splitUrl1[1];
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[1];
+		$sameCatNews[0]['relatedLink'] = $relatedLink1;
             } elseif (strpos($relatedLink1, 'game.nownews.com') == true) {
                 $splitUrl1 = explode('/', $relatedLink1);
                 $sameCatNews[0]['ID'] = $splitUrl1[5];
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = $relatedLink1 . '?id=' . $splitUrl1[5];
+		$sameCatNews[0]['relatedLink'] = $relatedLink1;
             } elseif (strpos($relatedLink1, 'action=edit') == true) {
                 $splitUrl1 = explode('post=', $relatedLink1)[1];
                 $sameCatNews[0]['ID'] = explode('&', $splitUrl1)[0];
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = $relatedLink1 . '?id=' . $sameCatNews[0]['ID'];
+		$sameCatNews[0]['relatedLink'] = $relatedLink1;
             } else {
                 $splitUrl1 = explode('/', $relatedLink1);
-                $sameCatNews[0]['ID'] = $splitUrl1[5] ?? null;
-                $sameCatNews[0]['title'] = $relatedTitle1;
-                $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[5];
+		if (count($splitUrl1) > 5) {
+                    $sameCatNews[0]['ID'] = $splitUrl1[5] ?? null;
+                    $sameCatNews[0]['title'] = $relatedTitle1;
+                    $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[5];
+		    $sameCatNews[0]['relatedLink'] = $relatedLink1;
+		}
             }
 
-            $sameCatNews[0]['relatedLink'] = $relatedLink1;
+//            $sameCatNews[0]['relatedLink'] = $relatedLink1;
         }
         $relatedTitle2 = $post->meta->relatedArticleTitle2;
         $relatedLink2 = $post->meta->relatedArticleLink2;
@@ -152,24 +158,30 @@ class RssController extends Controller
                 $sameCatNews[1]['ID'] = $splitUrl2[1];
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[1];
+		$sameCatNews[1]['relatedLink'] = $relatedLink2;
             } elseif (strpos($relatedLink2, 'game.nownews.com') == true) {
                 $splitUrl2 = explode('/', $relatedLink2);
                 $sameCatNews[1]['ID'] = $splitUrl2[5];
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = $relatedLink2 . '?id=' . $splitUrl2[5];
+		$sameCatNews[1]['relatedLink'] = $relatedLink2;
             } elseif (strpos($relatedLink2, 'action=edit') == true) {
                 $splitUrl2 = explode('post=', $relatedLink2)[1];
                 $sameCatNews[1]['ID'] = explode('&', $splitUrl2)[0];
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = $relatedLink2 . '?id=' . $sameCatNews[1]['ID'];
+		$sameCatNews[1]['relatedLink'] = $relatedLink2;
             } else {
                 $splitUrl2 = explode('/', $relatedLink2);
-                $sameCatNews[1]['ID'] = $splitUrl2[5] ?? null;
-                $sameCatNews[1]['title'] = $relatedTitle2;
-                $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[5];
+		if (count($splitUrl2) > 5) {
+                    $sameCatNews[1]['ID'] = $splitUrl2[5] ?? null;
+                    $sameCatNews[1]['title'] = $relatedTitle2;
+                    $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[5];
+		    $sameCatNews[1]['relatedLink'] = $relatedLink2;
+		}
             }
 
-            $sameCatNews[1]['relatedLink'] = $relatedLink2;
+//            $sameCatNews[1]['relatedLink'] = $relatedLink2;
         }
         $relatedTitle3 = $post->meta->relatedArticleTitle3;
         $relatedLink3 = $post->meta->relatedArticleLink3;
@@ -179,31 +191,42 @@ class RssController extends Controller
                 $sameCatNews[2]['ID'] = $splitUrl3[1];
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[1];
+		$sameCatNews[2]['relatedLink'] = $relatedLink3;
             } elseif (strpos($relatedLink3, 'game.nownews.com') == true) {
                 $splitUrl3 = explode('/', $relatedLink3);
                 $sameCatNews[2]['ID'] = $splitUrl3[5];
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = $relatedLink3 . '?id=' . $splitUrl3[5];
+		$sameCatNews[2]['relatedLink'] = $relatedLink3;
             } elseif (strpos($relatedLink3, 'action=edit') == true) {
                 $splitUrl3 = explode('post=', $relatedLink3)[1];
                 $sameCatNews[2]['ID'] = explode('&', $splitUrl3)[0];
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = $relatedLink3 . '?id=' . $sameCatNews[2]['ID'];
+		$sameCatNews[2]['relatedLink'] = $relatedLink3;
             } else {
                 $splitUrl3 = explode('/', $relatedLink3);
-                $sameCatNews[2]['ID'] = $splitUrl3[5] ?? null;
-                $sameCatNews[2]['title'] = $relatedTitle3;
-                $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[5];
+		if (count($splitUrl3) > 5) {
+                    $sameCatNews[2]['ID'] = $splitUrl3[5] ?? null;
+                    $sameCatNews[2]['title'] = $relatedTitle3;
+                    $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[5];
+		    $sameCatNews[2]['relatedLink'] = $relatedLink3;
+		}
             }
 
-            $sameCatNews[2]['relatedLink'] = $relatedLink3;
+//            $sameCatNews[2]['relatedLink'] = $relatedLink3;
         }
 //	}
 
         // remove items which relatedLink is not under nownews website
         $sameCatNews = collect($sameCatNews)
             ->filter(function ($item) {
-                return (bool)preg_match('/^https:\/\/(www|game)\.nownews\.com(\/.*$|$)/', $item['relatedLink']);
+                if (isset($item['relatedLink'])) {
+		    return (bool)preg_match('/^https:\/\/(www|game)\.nownews\.com(\/.*$|$)/', $item['relatedLink']);
+		}
+		else {
+		    return true;
+		}
             })
             ->map(function ($item) {
                 unset($item['relatedLink']);
