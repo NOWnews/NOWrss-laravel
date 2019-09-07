@@ -12,6 +12,11 @@ class IpMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        // ignore check ip if APP_ENV dev
+        if (env('APP_ENV') === 'dev') {
+            return $next($request);
+        }
+
         $allowIps = collect();
 
         try {
