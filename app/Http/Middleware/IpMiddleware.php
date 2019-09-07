@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\InvalidRequestLog;
 
 class IpMiddleware
 {
@@ -34,6 +36,13 @@ class IpMiddleware
 
         // redirect to nownews if request ip not allowed
         if ($isAllowed === false) {
+            InvalidRequestLog::create(
+                [
+                    'ip' => $ip,
+                    'created_at' => Carbon::now('Asia/Taipei'),
+                ]
+            );
+
             return redirect('https://www.nownews.com');
         }
 
