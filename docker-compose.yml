@@ -30,7 +30,7 @@ services:
     command:
       - "/cloud_sql_proxy"
       - "-instances"
-      - "nownews-website-199408:asia-east1:nownews-apps=tcp:0.0.0.0:3306,nownews-website-199408:asia-east1:nownews-website-test-20190720=tcp:0.0.0.0:3307"
+      - "nownews-website-199408:asia-east1:nownews-apps-test=tcp:0.0.0.0:3306,nownews-website-199408:asia-east1:nownews-website-test-20190902=tcp:0.0.0.0:3307"
       - "-credential_file"
       - "/config"
 

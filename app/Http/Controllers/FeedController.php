@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Feed;
+use App\Models\Feed;
 use Validator;
 use Corcel\Model\Taxonomy;
 use Corcel\Model\Post;
