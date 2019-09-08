@@ -8,7 +8,7 @@ use Corcel\Model\Post;
 use Corcel\Model\User;
 use Corcel\Model\Taxonomy;
 use Corcel\Model\Attachment;
-use App\Feed;
+use App\Models\Feed;
 
 class RssController extends Controller
 {
