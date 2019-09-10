@@ -120,83 +120,107 @@ class RssController extends Controller
         $relatedTitle1 = $post->meta->relatedArticleTitle1;
         $relatedLink1 = $post->meta->relatedArticleLink1;
         if ($relatedTitle1 != "" && $relatedLink1 != "" && strpos($relatedLink1, 'http') === 0) {
+	    $parseValid0 = false;
             if (strpos($relatedLink1, 'preview_id=') == true) {
                 $splitUrl1 = explode('preview_id=', $relatedLink1);
                 $sameCatNews[0]['ID'] = $splitUrl1[1];
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[1];
+		$parseValid0 = true;
             } elseif (strpos($relatedLink1, 'game.nownews.com') == true) {
                 $splitUrl1 = explode('/', $relatedLink1);
                 $sameCatNews[0]['ID'] = $splitUrl1[5];
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = $relatedLink1 . '?id=' . $splitUrl1[5];
+		$parseValid0 = true;
             } elseif (strpos($relatedLink1, 'action=edit') == true) {
                 $splitUrl1 = explode('post=', $relatedLink1)[1];
                 $sameCatNews[0]['ID'] = explode('&', $splitUrl1)[0];
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = $relatedLink1 . '?id=' . $sameCatNews[0]['ID'];
+		$parseValid0 = true;
             } else {
                 $splitUrl1 = explode('/', $relatedLink1);
-                $sameCatNews[0]['ID'] = $splitUrl1[5] ?? null;
-                $sameCatNews[0]['title'] = $relatedTitle1;
-                $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[5];
+		if (count($splitUrl1) >= 5) {
+                    $sameCatNews[0]['ID'] = $splitUrl1[5] ?? null;
+                    $sameCatNews[0]['title'] = $relatedTitle1;
+                    $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[5];
+		    $parseValid0 = true;
+		}
             }
-
-            $sameCatNews[0]['relatedLink'] = $relatedLink1;
+	    if ($parseValid0) {
+                $sameCatNews[0]['relatedLink'] = $relatedLink1;
+	    }
         }
         $relatedTitle2 = $post->meta->relatedArticleTitle2;
         $relatedLink2 = $post->meta->relatedArticleLink2;
         if ($relatedTitle2 != "" && $relatedLink2 != "" && strpos($relatedLink2, 'http') === 0) {
+	    $parseValid1 = false;
             if (strpos($relatedLink2, 'preview_id=') == true) {
                 $splitUrl2 = explode('preview_id=', $relatedLink2);
                 $sameCatNews[1]['ID'] = $splitUrl2[1];
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[1];
+		$parseValid1 = true;
             } elseif (strpos($relatedLink2, 'game.nownews.com') == true) {
                 $splitUrl2 = explode('/', $relatedLink2);
                 $sameCatNews[1]['ID'] = $splitUrl2[5];
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = $relatedLink2 . '?id=' . $splitUrl2[5];
+		$parseValid1 = true;
             } elseif (strpos($relatedLink2, 'action=edit') == true) {
                 $splitUrl2 = explode('post=', $relatedLink2)[1];
                 $sameCatNews[1]['ID'] = explode('&', $splitUrl2)[0];
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = $relatedLink2 . '?id=' . $sameCatNews[1]['ID'];
+		$parseValid1 = true;
             } else {
                 $splitUrl2 = explode('/', $relatedLink2);
-                $sameCatNews[1]['ID'] = $splitUrl2[5] ?? null;
-                $sameCatNews[1]['title'] = $relatedTitle2;
-                $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[5];
+		if (count($splitUrl2) >= 5) {
+                    $sameCatNews[1]['ID'] = $splitUrl2[5] ?? null;
+                    $sameCatNews[1]['title'] = $relatedTitle2;
+                    $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[5];
+		    $parseValid1 = true;
+		}
             }
-
-            $sameCatNews[1]['relatedLink'] = $relatedLink2;
+	    if ($parseValid1) {
+                $sameCatNews[1]['relatedLink'] = $relatedLink2;
+	    }
         }
         $relatedTitle3 = $post->meta->relatedArticleTitle3;
         $relatedLink3 = $post->meta->relatedArticleLink3;
         if ($relatedTitle3 != "" && $relatedLink3 != "" && strpos($relatedLink3, 'http') === 0) {
+	    $parseValid2 = false;
             if (strpos($relatedLink3, 'preview_id=') == true) {
                 $splitUrl3 = explode('preview_id=', $relatedLink3);
                 $sameCatNews[2]['ID'] = $splitUrl3[1];
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[1];
+		$parseValid2 = true;
             } elseif (strpos($relatedLink3, 'game.nownews.com') == true) {
                 $splitUrl3 = explode('/', $relatedLink3);
                 $sameCatNews[2]['ID'] = $splitUrl3[5];
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = $relatedLink3 . '?id=' . $splitUrl3[5];
+		$parseValid2 = true;
             } elseif (strpos($relatedLink3, 'action=edit') == true) {
                 $splitUrl3 = explode('post=', $relatedLink3)[1];
                 $sameCatNews[2]['ID'] = explode('&', $splitUrl3)[0];
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = $relatedLink3 . '?id=' . $sameCatNews[2]['ID'];
+		$parseValid2 = true;
             } else {
                 $splitUrl3 = explode('/', $relatedLink3);
-                $sameCatNews[2]['ID'] = $splitUrl3[5] ?? null;
-                $sameCatNews[2]['title'] = $relatedTitle3;
-                $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[5];
+		if (count($splitUrl3) >= 5) {
+                    $sameCatNews[2]['ID'] = $splitUrl3[5] ?? null;
+                    $sameCatNews[2]['title'] = $relatedTitle3;
+                    $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[5];
+		    $parseValid2 = true;
+		}
             }
-
-            $sameCatNews[2]['relatedLink'] = $relatedLink3;
+	    if ($parseValid2) {
+                $sameCatNews[2]['relatedLink'] = $relatedLink3;
+	    }
         }
 //	}
 
