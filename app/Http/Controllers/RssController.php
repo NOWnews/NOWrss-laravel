@@ -141,7 +141,7 @@ class RssController extends Controller
 		$parseValid0 = true;
             } else {
                 $splitUrl1 = explode('/', $relatedLink1);
-		if (count($splitUrl1) >= 5) {
+		if (count($splitUrl1) > 5) {
                     $sameCatNews[0]['ID'] = $splitUrl1[5] ?? null;
                     $sameCatNews[0]['title'] = $relatedTitle1;
                     $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[5];
@@ -176,7 +176,7 @@ class RssController extends Controller
 		$parseValid1 = true;
             } else {
                 $splitUrl2 = explode('/', $relatedLink2);
-		if (count($splitUrl2) >= 5) {
+		if (count($splitUrl2) > 5) {
                     $sameCatNews[1]['ID'] = $splitUrl2[5] ?? null;
                     $sameCatNews[1]['title'] = $relatedTitle2;
                     $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[5];
@@ -211,7 +211,7 @@ class RssController extends Controller
 		$parseValid2 = true;
             } else {
                 $splitUrl3 = explode('/', $relatedLink3);
-		if (count($splitUrl3) >= 5) {
+		if (count($splitUrl3) > 5) {
                     $sameCatNews[2]['ID'] = $splitUrl3[5] ?? null;
                     $sameCatNews[2]['title'] = $relatedTitle3;
                     $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[5];
@@ -443,6 +443,7 @@ class RssController extends Controller
                 $element = "{$element}<p>";
                 $PostContent = str_replace($matches[0], $element, $PostContent);
             }
+	    $PostContent = "<figure class=\"op-ad\"><iframe width=\"300\" height=\"250\" style=\"border:0; margin:0;\" src=\"https://www.facebook.com/adnw_request?placement=\"1789112951323406_2424730391094989\"&adtype=banner300x250\"></iframe></figure>" . $PostContent;
         }
 
         //dd($PostContent);
