@@ -443,7 +443,7 @@ class RssController extends Controller
                 $element = "{$element}<p>";
                 $PostContent = str_replace($matches[0], $element, $PostContent);
             }
-	    $PostContent = "<figure class=\"op-ad\"><iframe width=\"300\" height=\"250\" style=\"border:0; margin:0;\" src=\"https://www.facebook.com/adnw_request?placement=\"1789112951323406_2424730391094989\"&adtype=banner300x250\"></iframe></figure>" . $PostContent;
+	    $PostContent = "<figure class=\"op-ad\"><iframe width=\"300\" height=\"250\" style=\"border:0; margin:0;\" src=\"https://www.facebook.com/adnw_request?placement=1789112951323406_2424730391094989&adtype=banner300x250\"></iframe></figure>" . $PostContent;
         }
 
         //dd($PostContent);
