@@ -17,6 +17,8 @@ Route::get('/', function () {
 
 Route::get('/rss/{uuid}', 'RssController@index');
 
+Route::get('/subChannel/rssPetsmao', 'RssController@petsmaoRss');
+
 Route::resource('feeds', 'FeedController')->middleware('ipcheck');
 
 Route::get('/clear-cache', function() {

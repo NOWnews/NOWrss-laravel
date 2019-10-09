@@ -12,6 +12,8 @@ use App\Models\Feed;
 
 class RssController extends Controller
 {
+    private $develop = false;
+
     //
     public function create_uuid($posts_id)
     {
@@ -36,7 +38,7 @@ class RssController extends Controller
             $link = $post->meta->youtubeLink;
         }
 
-        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             echo "getYoutubeLink spend: " . (time() - $startTime1) . "<br>\r\n";
         }
         return $link;
@@ -50,7 +52,7 @@ class RssController extends Controller
         $countNewsNum = null;
         $sameCatNewsNum = '4';//same cat news you want +1
         $Post_params = null;
-        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             dump($category->term_id);
             $Post_params = Cache::get('postparams' . $category->term_id);
         } else {
@@ -60,12 +62,12 @@ class RssController extends Controller
 //	$Post_params = Cache::get('postparams'.$PostId);
 
         if (!$Post_params) {
-            if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+            if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                 echo "get_sameCatNews has no cache" . "</br>\r\n";
             }
 
             $Post_params = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['can_send_rss' => '1'])->take($sameCatNewsNum)->get();
-            if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+            if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                 Cache::put('postparams' . $category->term_id, $Post_params, 5);
             } else {
 //			Cache::put('postparams'.$PostId, $Post_params, 5);
@@ -89,7 +91,7 @@ class RssController extends Controller
                 'guid' => $Post_param->guid,
             ];
         }
-        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             echo $PostId . " getSameCatNews part1 spend: " . (time() - $startTime2) . "<br>\r\n";
         }
         $startTime3 = time();
@@ -239,7 +241,7 @@ class RssController extends Controller
             })
             ->toArray();
 
-        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             echo $PostId . " getSameCatNews part2 spend: " . (time() - $startTime3) . "<br>\r\n";
 //		dump($sameCatNews);
         }
@@ -270,7 +272,7 @@ class RssController extends Controller
             $cats[] = $allCatId[$cat];
         }
 
-        if ($feed['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+        if ($feed['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             echo "get_category spend: " . (time() - $startTime3) . "<br>\r\n";
         }
 
@@ -292,7 +294,7 @@ class RssController extends Controller
         if ($FeedParam['language'] != 'traditional') {
             $postCat = $this->convert_language($postCat);
         }
-        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             echo "get_current_category spend: " . (time() - $startTime4) . "<br>\r\n";
         }
 
@@ -367,7 +369,7 @@ class RssController extends Controller
         if ($FeedParam['uuid'] == 'A89FE992-76D5-72F1-21F9-CD622EA397E7') {
             //dump($PostContent);
         }
-        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             echo "parser_expert spend: " . (time() - $startTime6) . "<br>\r\n";
         }
 
@@ -452,7 +454,7 @@ class RssController extends Controller
             $PostContent = $this->convert_language($PostContent);
         }
 
-        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             $pattern = "/<p(>|\s+[^>]*>)<img.*?<\/p>/i";
 //		preg_match_all( '/^<p>(<img[^>]+>)(.)<\/p>$/i' , $PostContent, $match );
 //		preg_match_all( '/(<p(>|\s+[^>]*>)<img.*?<\/p>)/', $PostContent, $match);
@@ -493,7 +495,7 @@ class RssController extends Controller
         }
         $PostParam = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $PostParam);
 
-        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             echo "convert_param spend: " . (time() - $startTime8) . "<br>\r\n";
 //		dump($PostParam);
         }
@@ -532,17 +534,17 @@ class RssController extends Controller
             $countNewsMutiple = $countNewsSingle / count($FeedParam['slug']);//cat >= 2
 
             if (count($FeedParam['slug']) > '1') {
-                if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+                if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                     echo "slug > 1" . $rn;
                 }
                 foreach ($FeedParam['slug'] as $catSlug) {
-                    if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+                    if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                         echo "--category: " . $catSlug . $rn;
                     }
 
                     $category = Taxonomy::where('taxonomy', 'category')->slug($catSlug)->first();
 
-                    if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+                    if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                         echo "===category: " . $category . $rn;
                     }
                     //$Posts_res = Cache::get('postsresmut'.$category);
@@ -553,12 +555,12 @@ class RssController extends Controller
 
 
                     if (Cache::has('postsresmut' . $category)) {
-                        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+                        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                             echo "has cache" . $rn;
                         }
                         $Posts_res = Cache::get('postsresmut' . $category);
                     } else {
-                        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+                        if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                             echo "has no cache" . $rn;
                         }
                         $Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get();
@@ -567,7 +569,7 @@ class RssController extends Controller
                     $Posts = $Posts->merge($Posts_res);
                 }
             } elseif (count($FeedParam['slug']) == '1') {
-                if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+                if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                     echo "slug == 1" . $rn;
                 }
 
@@ -582,12 +584,12 @@ class RssController extends Controller
 
 
                 if (Cache::has('postsressin' . $category)) {
-                    if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+                    if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                         echo "has cache" . $rn;
                     }
                     $Posts_res = Cache::get('postsressin' . $category);
                 } else {
-                    if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+                    if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                         echo "has no cache" . $rn;
                     }
                     $Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsSingle)->get();
@@ -596,7 +598,7 @@ class RssController extends Controller
                 $Posts = $Posts_res;
             }
 
-            if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+            if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                 echo "get Posts spend: " . (time() - $startTime9) . "</br>\r\n";
             }
 
@@ -606,7 +608,7 @@ class RssController extends Controller
             })->sortByDesc('post_date')->values();
             /*Get Feed Posts End*/
 
-            if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+            if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
 //		dump($Posts);
             }
             /**************************
@@ -641,7 +643,7 @@ class RssController extends Controller
                 }
 
                 $endTime = time();
-                if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4') {
+                if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                     echo "map array total spend: " . (time() - $startTime) . "</br>\r\n";
                 }
                 return $res;
@@ -710,5 +712,93 @@ class RssController extends Controller
         } else {
             return view('welcome')->with('uuid', $uuid);
         }
+    }
+
+    public function petsmaoRss(Request $request) {
+	$url = "https://petsmao.nownews.com/wp-json/wp/v2/posts?page=1&per_page=50&_embed";
+	$content = file_get_contents("$url");
+	$jsonContent = json_decode($content, true);
+	$milliseconds = (int)round(microtime(true) * 1000);
+	$rssPosts = [];
+	$posts_id = null;
+
+	foreach($jsonContent as $data) {
+	    $posts_id .= $data['id'];
+	    $categories = $data["categories"];
+	    $minCategory = min($categories);
+	    $minCategoryIndex = array_search($minCategory, $categories);
+
+	    if (isset($data["metadata"]["can_send_rss"]) && $data["metadata"]["can_send_rss"][0] === "0") {
+		continue;
+	    }
+
+	    $item = [
+		'ID' => $data["id"],
+		'title' => $data["title"]["rendered"],
+		'author' => $data["_embedded"]["author"][0]["name"],
+		'guid' => $data["guid"]["rendered"],
+		'content' => $data["content"]["rendered"] . $this->getRelatedArticles($data),
+		'expert' => $data["excerpt"]["rendered"],
+		'subcategory' => $data["_embedded"]["wp:term"][0][$minCategoryIndex]["name"],
+		'date' => date_format(date_create($data["date"]), 'D d M Y H:i:s O'),
+		'startYmdtUnix' => strtotime($data["date"]) * 1000,
+                'publishTimeUnix' => strtotime($data["date"]) * 1000,
+                'updateTimeUnix' => strtotime($data["modified"]) * 1000,
+		'image' => $this->getFeaturedImageData($data),
+		'videoLink' => ""
+	    ];
+	    array_push($rssPosts, (object)$item);
+
+	    if (count($rssPosts) >= 30) {
+		break;
+	    }
+	}
+
+	$UUID = $this->create_uuid($posts_id);
+	return response()->view(strtolower('line'), ['rssPosts' => $rssPosts, 'milliseconds' => $milliseconds, 'UUID' => $UUID])->header('Content-Type', 'text/xml');
+    }
+
+    private function getFeaturedImageData($data) {
+	$image = [
+	    'ID' => $data["_embedded"]["wp:featuredmedia"][0]["id"],
+            'title' => $data["_embedded"]["wp:featuredmedia"][0]["title"]["rendered"],
+            'content' => $data["_embedded"]["wp:featuredmedia"][0]["caption"]["rendered"],
+            'guid' => $data["_embedded"]["wp:featuredmedia"][0]["source_url"]
+	];
+	return (object)$image;
+    }
+
+    private function getRelatedArticles($data) {
+	$hasMore = false;
+	$moreStr = "";
+	$more1 = "";
+	$more2 = "";
+	$more3 = "";
+	if (isset($data["metadata"]["relatedArticleTitle1"]) && isset($data["metadata"]["relatedArticleLink1"])) {
+	    $title1 = $data["metadata"]["relatedArticleTitle1"][0];
+	    $link1 = $data["metadata"]["relatedArticleLink1"][0];
+	    $hasMore = true;
+	    $more1 = "<br/><a href=\"" . $link1 . "\">" . $title1 . "</a>"; 
+	}
+	if (isset($data["metadata"]["relatedArticleTitle2"]) && isset($data["metadata"]["relatedArticleLink2"])) {
+            $title2 = $data["metadata"]["relatedArticleTitle2"][0];
+            $link2 = $data["metadata"]["relatedArticleLink2"][0];
+            $hasMore = true;
+            $more2 = "<br/><a href=\"" . $link2 . "\">" . $title2 . "</a>";
+        }
+	if (isset($data["metadata"]["relatedArticleTitle3"]) && isset($data["metadata"]["relatedArticleLink3"])) {
+            $title3 = $data["metadata"]["relatedArticleTitle3"][0];
+            $link3 = $data["metadata"]["relatedArticleLink3"][0];
+            $hasMore = true;
+            $more3 = "<br/><a href=\"" . $link3 . "\">" . $title3 . "</a>";
+        }
+
+	if ($hasMore) {
+	    $moreStr = "<div><p class=\"read-more-vendor\"><span>更多寵毛網新聞</span>" . $more1 . $more2 . $more3 . "</p></div>";
+	}
+	
+	$moreStr = $moreStr . "<div><br/><a href=\"http://line.me/ti/p/@nownews\">加入NOWnews 今日新聞官方帳號</a></div>"; 
+
+	return $moreStr;
     }
 }
