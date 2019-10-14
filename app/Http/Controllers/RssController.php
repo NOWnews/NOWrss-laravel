@@ -774,30 +774,34 @@ class RssController extends Controller
 	$more1 = "";
 	$more2 = "";
 	$more3 = "";
-	if (isset($data["metadata"]["relatedArticleTitle1"]) && isset($data["metadata"]["relatedArticleLink1"])) {
+	$count = 0;
+	if (isset($data["metadata"]["relatedArticleTitle1"]) && isset($data["metadata"]["relatedArticleLink1"]) && $count < 2) {
 	    $title1 = $data["metadata"]["relatedArticleTitle1"][0];
 	    $link1 = $data["metadata"]["relatedArticleLink1"][0];
 	    $hasMore = true;
 	    $more1 = "<br/><a href=\"" . $link1 . "\">" . $title1 . "</a>"; 
+	    $count++;
 	}
-	if (isset($data["metadata"]["relatedArticleTitle2"]) && isset($data["metadata"]["relatedArticleLink2"])) {
+	if (isset($data["metadata"]["relatedArticleTitle2"]) && isset($data["metadata"]["relatedArticleLink2"]) && $count < 2) {
             $title2 = $data["metadata"]["relatedArticleTitle2"][0];
             $link2 = $data["metadata"]["relatedArticleLink2"][0];
             $hasMore = true;
             $more2 = "<br/><a href=\"" . $link2 . "\">" . $title2 . "</a>";
+	    $count++;
         }
-	if (isset($data["metadata"]["relatedArticleTitle3"]) && isset($data["metadata"]["relatedArticleLink3"])) {
+	if (isset($data["metadata"]["relatedArticleTitle3"]) && isset($data["metadata"]["relatedArticleLink3"]) && $count < 2) {
             $title3 = $data["metadata"]["relatedArticleTitle3"][0];
             $link3 = $data["metadata"]["relatedArticleLink3"][0];
             $hasMore = true;
             $more3 = "<br/><a href=\"" . $link3 . "\">" . $title3 . "</a>";
+	    $count++;
         }
 
 	if ($hasMore) {
 	    $moreStr = "<div><p class=\"read-more-vendor\"><span>更多寵毛網新聞</span>" . $more1 . $more2 . $more3 . "</p></div>";
 	}
 	
-	$moreStr = $moreStr . "<div><br/><a href=\"http://line.me/ti/p/@nownews\">加入NOWnews 今日新聞官方帳號</a></div>"; 
+	$moreStr = $moreStr . "<div><br/><a href=\"http://line.me/ti/p/@nownews\">想看更多寵物資訊！立即加入NOWnews今日新聞官方帳號</a></div>"; 
 
 	return $moreStr;
     }
