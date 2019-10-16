@@ -380,7 +380,7 @@ class RssController extends Controller
 //	$Post->dump();
     //  }
 
-    public function parser_content($PostContent, $FeedParam)
+    public function parser_content($PostContent, $FeedParam, $editedMedia)
     {
         $startTime7 = time();
 
@@ -426,6 +426,16 @@ class RssController extends Controller
             $PostContent = preg_replace('/width="(.*?)" height="(.*?)"/', '', $PostContent);
         }
         if ($FeedParam['layout'] == 'YAHOO') {
+	    if ($editedMedia == '1') {
+		preg_match_all("/<iframe[^>]+>.*?<\/iframe>/", $PostContent, $matches); //find all iframes
+		if ($matches) {
+		    foreach($matches[0] as $match) {
+			if (strpos($match, 'youtube') !== false) { // remove iframe which contains youtube
+			    $PostContent = str_replace($match, '', $PostContent);
+			}
+		    }
+		}
+	    }
             $PostContent = str_replace('<br/>', '</p><p>', $PostContent);
             $PostContent = '<p>' . $PostContent . '</p>';
         }
@@ -621,7 +631,7 @@ class RssController extends Controller
                     'ID' => $Posts->ID,
                     'author' => $this->convert_param(preg_replace('/[\x00-\x1F\x7F-\x9F]/u', '', Post::find($Posts->ID)->byline), $FeedParam),
                     'date' => date_format($Posts->post_date, 'D d M Y H:i:s O'),
-                    'content' => $this->parser_content($Posts->post_content, $FeedParam),
+                    'content' => $this->parser_content($Posts->post_content, $FeedParam, $Posts->meta->editedMedia),
                     'expert' => $this->parser_expert($Posts->post_content, $FeedParam),
                     'title' => $this->convert_param(preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $Posts->post_title), $FeedParam),
                     'guid' => $Posts->guid,
@@ -777,21 +787,21 @@ class RssController extends Controller
 	$count = 0;
 	if (isset($data["metadata"]["relatedArticleTitle1"]) && isset($data["metadata"]["relatedArticleLink1"]) && $count < 2) {
 	    $title1 = $data["metadata"]["relatedArticleTitle1"][0];
-	    $link1 = $data["metadata"]["relatedArticleLink1"][0];
+	    $link1 = $data["metadata"]["relatedArticleLink1"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
 	    $hasMore = true;
 	    $more1 = "<br/><a href=\"" . $link1 . "\">" . $title1 . "</a>"; 
 	    $count++;
 	}
 	if (isset($data["metadata"]["relatedArticleTitle2"]) && isset($data["metadata"]["relatedArticleLink2"]) && $count < 2) {
             $title2 = $data["metadata"]["relatedArticleTitle2"][0];
-            $link2 = $data["metadata"]["relatedArticleLink2"][0];
+            $link2 = $data["metadata"]["relatedArticleLink2"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
             $hasMore = true;
             $more2 = "<br/><a href=\"" . $link2 . "\">" . $title2 . "</a>";
 	    $count++;
         }
 	if (isset($data["metadata"]["relatedArticleTitle3"]) && isset($data["metadata"]["relatedArticleLink3"]) && $count < 2) {
             $title3 = $data["metadata"]["relatedArticleTitle3"][0];
-            $link3 = $data["metadata"]["relatedArticleLink3"][0];
+            $link3 = $data["metadata"]["relatedArticleLink3"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
             $hasMore = true;
             $more3 = "<br/><a href=\"" . $link3 . "\">" . $title3 . "</a>";
 	    $count++;
