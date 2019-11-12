@@ -528,6 +528,11 @@ class RssController extends Controller
             $FeedParam['layout'] = $feed->layout;
             $FeedParam['slug'] = $this->get_category($feed);
         }
+
+if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
+	dump($FeedParam['slug']);
+}
+
         if ($FeedParam['status'] == '1') {
             /*********************
              *Set Feed Info Start*
@@ -562,7 +567,6 @@ class RssController extends Controller
 //                        $Posts_res = $category->posts()->newest()->status('publish')->type('post')->hasMeta(['is_age_restriction' => '0', 'can_send_rss' => '1'])->take($countNewsMutiple)->get(); 
                     // Cache::put('postsresmut'.$category, $Posts_res, 5);
                     //}
-
 
                     if (Cache::has('postsresmut' . $category)) {
                         if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
@@ -644,13 +648,16 @@ class RssController extends Controller
                     'TaiwanMobileDate' => date_format($Posts->post_date, 'D M d Y H:i:s \G\M\TO'),
                     'sameCatNews' => $this->get_sameCatNews($Posts->ID, Post::find($Posts->ID)->taxonomies->first(), $FeedParam),
                     'videoLink' => $this->getYoutubeLink($Posts->ID, $FeedParam),
-                    'readMoreVendor' => '更多 今日新聞 報導',
+                    'readMoreVendor' => '更多 NOWnews 今日新聞 報導',
                 ];
 
-                // rewrite readMoreVendor if Yahoo_TW
-                if ($FeedParam['uuid'] === '53F317D5-3B3A-4487-9505-CA526A9D54B8') {
-                    $res['readMoreVendor'] = '更多 NOWnews 今日新聞 報導';
-                }
+                // rewrite readMoreVendor if Yahoo_HK
+//                if ($FeedParam['uuid'] === '53F317D5-3B3A-4487-9505-CA526A9D54B8') {
+//                    $res['readMoreVendor'] = '更多 NOWnews 今日新聞 報導';
+//                }
+		if ($FeedParam['uuid'] === 'E83A4F6A-5327-4835-92B9-876179BC68EE') {
+		    $res['readMoreVendor'] = '更多 今日新聞 報導';
+		}
 
                 $endTime = time();
                 if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
@@ -769,13 +776,35 @@ class RssController extends Controller
     }
 
     private function getFeaturedImageData($data) {
+	if (isset($data["_embedded"]["wp:featuredmedia"][0]["id"])) {
 	$image = [
 	    'ID' => $data["_embedded"]["wp:featuredmedia"][0]["id"],
             'title' => $data["_embedded"]["wp:featuredmedia"][0]["title"]["rendered"],
             'content' => $data["_embedded"]["wp:featuredmedia"][0]["caption"]["rendered"],
             'guid' => $data["_embedded"]["wp:featuredmedia"][0]["source_url"]
 	];
-	return (object)$image;
+	    return (object)$image;
+	}
+	else {
+	    $image = [];
+	    return (object)$image;
+	}
+    }
+
+    private function getFeaturedImageDataObject($data) {
+        if (isset($data["_embedded"]["wp:featuredmedia"][0]["id"])) {
+    	    $image = [
+                'ID' => $data["_embedded"]["wp:featuredmedia"][0]["id"],
+                'title' => $data["_embedded"]["wp:featuredmedia"][0]["title"]["rendered"],
+                'content' => $data["_embedded"]["wp:featuredmedia"][0]["caption"]["rendered"],
+                'guid' => $data["_embedded"]["wp:featuredmedia"][0]["source_url"]
+            ];
+            return $image;
+        }
+        else {
+            $image = [];
+            return (object)$image;
+        }
     }
 
     private function getRelatedArticles($data) {
@@ -814,5 +843,95 @@ class RssController extends Controller
 	$moreStr = $moreStr . "<div><br/><a href=\"http://line.me/ti/p/@nownews\">想看更多寵物資訊！立即加入NOWnews今日新聞官方帳號</a></div>"; 
 
 	return $moreStr;
+    }
+
+    private function getRelatedArticlesArr($data, $websiteTitle) {
+	$hasMore = false;
+	$moreStr = "";
+        $more1 = "";
+        $more2 = "";
+        $more3 = "";
+        $count = 0;
+	if (isset($data["metadata"]["relatedArticleTitle1"]) && isset($data["metadata"]["relatedArticleLink1"])) {
+            $title1 = $data["metadata"]["relatedArticleTitle1"][0];
+	    $link1 = $data["metadata"]["relatedArticleLink1"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
+            $hasMore = true;
+            $more1 = "<br/><a href=\"" . $link1 . "\">" . $title1 . "</a>";
+        }
+	if (isset($data["metadata"]["relatedArticleTitle2"]) && isset($data["metadata"]["relatedArticleLink2"])) {
+            $title2 = $data["metadata"]["relatedArticleTitle2"][0];
+            $link2 = $data["metadata"]["relatedArticleLink2"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
+            $hasMore = true;
+            $more2 = "<br/><a href=\"" . $link2 . "\">" . $title2 . "</a>";
+            $count++;
+        }
+        if (isset($data["metadata"]["relatedArticleTitle3"]) && isset($data["metadata"]["relatedArticleLink3"])) {
+            $title3 = $data["metadata"]["relatedArticleTitle3"][0];
+            $link3 = $data["metadata"]["relatedArticleLink3"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
+            $hasMore = true;
+            $more3 = "<br/><a href=\"" . $link3 . "\">" . $title3 . "</a>";
+            $count++;
+        }
+
+	if ($hasMore) {
+            $moreStr = "<div><p class=\"read-more-vendor\"><span>更多" . $websiteTitle . "新聞</span>" . $more1 . $more2 . $more3 . "</p></div>";
+        }
+
+	return $moreStr;
+    }
+
+    public function babyouRss($type) {
+	$url = "https://babyou.nownews.com/wp-json/wp/v2/posts?page=1&per_page=50&_embed&categories_exclude=15";
+        $content = file_get_contents("$url");
+        $jsonContent = json_decode($content, true);
+        $milliseconds = (int)round(microtime(true) * 1000);
+        $rssPosts = [];
+        $posts_id = null;
+
+        foreach($jsonContent as $data) {
+            $posts_id .= $data['id'];
+            $categories = $data["categories"];
+            $minCategory = min($categories);
+            $minCategoryIndex = array_search($minCategory, $categories);
+
+            if (isset($data["metadata"]["can_send_rss"]) && $data["metadata"]["can_send_rss"][0] === "0") {
+//                continue;
+            }
+
+            $item = [
+                'ID' => $data["id"],
+                'title' => $data["title"]["rendered"],
+                'author' => $data["_embedded"]["author"][0]["name"],
+                'guid' => $data["guid"]["rendered"],
+                'content' => $data["content"]["rendered"] . "新聞來源為「NOWnews今日新聞」",
+                'expert' => $data["excerpt"]["rendered"],
+                'subcategory' => $data["_embedded"]["wp:term"][0][$minCategoryIndex]["name"],
+                'date' => date_format(date_create($data["date"]), 'D d M Y H:i:s O'),
+                'startYmdtUnix' => strtotime($data["date"]) * 1000,
+                'publishTimeUnix' => strtotime($data["date"]) * 1000,
+                'updateTimeUnix' => strtotime($data["modified"]) * 1000,
+                'image' => $this->getFeaturedImageDataObject($data),
+                'videoLink' => "",
+		'sameCatNews' => $this->getRelatedArticlesArr($data, "姊妹淘")
+            ];
+
+
+	    if (array_get($item, 'image')) {
+		$imageGuid = array_get(array_get($item, 'image'), 'guid');
+		$imageContent = array_get(array_get($item, 'image'), 'content');
+		$postContent = array_get($item, 'content');
+		$postContent = "<div class=\"main-photo\"><img src=\"" . $imageGuid . "\" alt=\"" . $imageContent . "\"/></div>" . $postContent;
+		array_set($item, 'content', $postContent);
+	    }
+
+            array_push($rssPosts, (object)$item);
+
+            if (count($rssPosts) >= 30) {
+                break;
+            }
+        }
+
+        $UUID = $this->create_uuid($posts_id);
+        return response()->view(strtolower($type), ['rssPosts' => $rssPosts, 'milliseconds' => $milliseconds, 'UUID' => $UUID])->header('Content-Type', 'text/xml');
     }
 }
