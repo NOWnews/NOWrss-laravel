@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  nginx:
+  dev.feed.nownews:
     build: ./build/nginx
     ports:
       - "80:80"

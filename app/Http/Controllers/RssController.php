@@ -122,107 +122,107 @@ class RssController extends Controller
         $relatedTitle1 = $post->meta->relatedArticleTitle1;
         $relatedLink1 = $post->meta->relatedArticleLink1;
         if ($relatedTitle1 != "" && $relatedLink1 != "" && strpos($relatedLink1, 'http') === 0) {
-	    $parseValid0 = false;
+            $parseValid0 = false;
             if (strpos($relatedLink1, 'preview_id=') == true) {
                 $splitUrl1 = explode('preview_id=', $relatedLink1);
                 $sameCatNews[0]['ID'] = $splitUrl1[1];
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[1];
-		$parseValid0 = true;
+                $parseValid0 = true;
             } elseif (strpos($relatedLink1, 'game.nownews.com') == true) {
                 $splitUrl1 = explode('/', $relatedLink1);
                 $sameCatNews[0]['ID'] = $splitUrl1[5];
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = $relatedLink1 . '?id=' . $splitUrl1[5];
-		$parseValid0 = true;
+                $parseValid0 = true;
             } elseif (strpos($relatedLink1, 'action=edit') == true) {
                 $splitUrl1 = explode('post=', $relatedLink1)[1];
                 $sameCatNews[0]['ID'] = explode('&', $splitUrl1)[0];
                 $sameCatNews[0]['title'] = $relatedTitle1;
                 $sameCatNews[0]['guid'] = $relatedLink1 . '?id=' . $sameCatNews[0]['ID'];
-		$parseValid0 = true;
+                $parseValid0 = true;
             } else {
                 $splitUrl1 = explode('/', $relatedLink1);
-		if (count($splitUrl1) > 5) {
+                if (count($splitUrl1) > 5) {
                     $sameCatNews[0]['ID'] = $splitUrl1[5] ?? null;
                     $sameCatNews[0]['title'] = $relatedTitle1;
                     $sameCatNews[0]['guid'] = 'https://nownews.com/?p=' . $splitUrl1[5];
-		    $parseValid0 = true;
-		}
+                    $parseValid0 = true;
+                }
             }
-	    if ($parseValid0) {
+            if ($parseValid0) {
                 $sameCatNews[0]['relatedLink'] = $relatedLink1;
-	    }
+            }
         }
         $relatedTitle2 = $post->meta->relatedArticleTitle2;
         $relatedLink2 = $post->meta->relatedArticleLink2;
         if ($relatedTitle2 != "" && $relatedLink2 != "" && strpos($relatedLink2, 'http') === 0) {
-	    $parseValid1 = false;
+            $parseValid1 = false;
             if (strpos($relatedLink2, 'preview_id=') == true) {
                 $splitUrl2 = explode('preview_id=', $relatedLink2);
                 $sameCatNews[1]['ID'] = $splitUrl2[1];
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[1];
-		$parseValid1 = true;
+                $parseValid1 = true;
             } elseif (strpos($relatedLink2, 'game.nownews.com') == true) {
                 $splitUrl2 = explode('/', $relatedLink2);
                 $sameCatNews[1]['ID'] = $splitUrl2[5];
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = $relatedLink2 . '?id=' . $splitUrl2[5];
-		$parseValid1 = true;
+                $parseValid1 = true;
             } elseif (strpos($relatedLink2, 'action=edit') == true) {
                 $splitUrl2 = explode('post=', $relatedLink2)[1];
                 $sameCatNews[1]['ID'] = explode('&', $splitUrl2)[0];
                 $sameCatNews[1]['title'] = $relatedTitle2;
                 $sameCatNews[1]['guid'] = $relatedLink2 . '?id=' . $sameCatNews[1]['ID'];
-		$parseValid1 = true;
+                $parseValid1 = true;
             } else {
                 $splitUrl2 = explode('/', $relatedLink2);
-		if (count($splitUrl2) > 5) {
+                if (count($splitUrl2) > 5) {
                     $sameCatNews[1]['ID'] = $splitUrl2[5] ?? null;
                     $sameCatNews[1]['title'] = $relatedTitle2;
                     $sameCatNews[1]['guid'] = 'https://nownews.com/?p=' . $splitUrl2[5];
-		    $parseValid1 = true;
-		}
+                    $parseValid1 = true;
+                }
             }
-	    if ($parseValid1) {
+            if ($parseValid1) {
                 $sameCatNews[1]['relatedLink'] = $relatedLink2;
-	    }
+            }
         }
         $relatedTitle3 = $post->meta->relatedArticleTitle3;
         $relatedLink3 = $post->meta->relatedArticleLink3;
         if ($relatedTitle3 != "" && $relatedLink3 != "" && strpos($relatedLink3, 'http') === 0) {
-	    $parseValid2 = false;
+            $parseValid2 = false;
             if (strpos($relatedLink3, 'preview_id=') == true) {
                 $splitUrl3 = explode('preview_id=', $relatedLink3);
                 $sameCatNews[2]['ID'] = $splitUrl3[1];
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[1];
-		$parseValid2 = true;
+                $parseValid2 = true;
             } elseif (strpos($relatedLink3, 'game.nownews.com') == true) {
                 $splitUrl3 = explode('/', $relatedLink3);
                 $sameCatNews[2]['ID'] = $splitUrl3[5];
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = $relatedLink3 . '?id=' . $splitUrl3[5];
-		$parseValid2 = true;
+                $parseValid2 = true;
             } elseif (strpos($relatedLink3, 'action=edit') == true) {
                 $splitUrl3 = explode('post=', $relatedLink3)[1];
                 $sameCatNews[2]['ID'] = explode('&', $splitUrl3)[0];
                 $sameCatNews[2]['title'] = $relatedTitle3;
                 $sameCatNews[2]['guid'] = $relatedLink3 . '?id=' . $sameCatNews[2]['ID'];
-		$parseValid2 = true;
+                $parseValid2 = true;
             } else {
                 $splitUrl3 = explode('/', $relatedLink3);
-		if (count($splitUrl3) > 5) {
+                if (count($splitUrl3) > 5) {
                     $sameCatNews[2]['ID'] = $splitUrl3[5] ?? null;
                     $sameCatNews[2]['title'] = $relatedTitle3;
                     $sameCatNews[2]['guid'] = 'https://nownews.com/?p=' . $splitUrl3[5];
-		    $parseValid2 = true;
-		}
+                    $parseValid2 = true;
+                }
             }
-	    if ($parseValid2) {
+            if ($parseValid2) {
                 $sameCatNews[2]['relatedLink'] = $relatedLink3;
-	    }
+            }
         }
 //	}
 
@@ -426,16 +426,16 @@ class RssController extends Controller
             $PostContent = preg_replace('/width="(.*?)" height="(.*?)"/', '', $PostContent);
         }
         if ($FeedParam['layout'] == 'YAHOO') {
-	    if ($editedMedia == '1') {
-		preg_match_all("/<iframe[^>]+>.*?<\/iframe>/", $PostContent, $matches); //find all iframes
-		if ($matches) {
-		    foreach($matches[0] as $match) {
-			if (strpos($match, 'youtube') !== false) { // remove iframe which contains youtube
-			    $PostContent = str_replace($match, '', $PostContent);
-			}
-		    }
-		}
-	    }
+            if ($editedMedia == '1') {
+                preg_match_all("/<iframe[^>]+>.*?<\/iframe>/", $PostContent, $matches); //find all iframes
+                if ($matches) {
+                    foreach ($matches[0] as $match) {
+                        if (strpos($match, 'youtube') !== false) { // remove iframe which contains youtube
+                            $PostContent = str_replace($match, '', $PostContent);
+                        }
+                    }
+                }
+            }
             $PostContent = str_replace('<br/>', '</p><p>', $PostContent);
             $PostContent = '<p>' . $PostContent . '</p>';
         }
@@ -455,7 +455,7 @@ class RssController extends Controller
                 $element = "{$element}<p>";
                 $PostContent = str_replace($matches[0], $element, $PostContent);
             }
-	    $PostContent = "<figure class=\"op-ad\"><iframe width=\"300\" height=\"250\" style=\"border:0; margin:0;\" src=\"https://www.facebook.com/adnw_request?placement=1789112951323406_2424730391094989&adtype=banner300x250\"></iframe></figure>" . $PostContent . "<figure class=\"op-ad\"><iframe width=\"300\" height=\"250\" style=\"border:0; margin:0;\" src=\"https://www.facebook.com/adnw_request?placement=1789112951323406_2429407363960625&adtype=banner300x250\"></iframe></figure>";
+            $PostContent = "<figure class=\"op-ad\"><iframe width=\"300\" height=\"250\" style=\"border:0; margin:0;\" src=\"https://www.facebook.com/adnw_request?placement=1789112951323406_2424730391094989&adtype=banner300x250\"></iframe></figure>" . $PostContent . "<figure class=\"op-ad\"><iframe width=\"300\" height=\"250\" style=\"border:0; margin:0;\" src=\"https://www.facebook.com/adnw_request?placement=1789112951323406_2429407363960625&adtype=banner300x250\"></iframe></figure>";
         }
 
         //dd($PostContent);
@@ -529,9 +529,9 @@ class RssController extends Controller
             $FeedParam['slug'] = $this->get_category($feed);
         }
 
-if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
-	dump($FeedParam['slug']);
-}
+        if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
+            dump($FeedParam['slug']);
+        }
 
         if ($FeedParam['status'] == '1') {
             /*********************
@@ -655,9 +655,9 @@ if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
 //                if ($FeedParam['uuid'] === '53F317D5-3B3A-4487-9505-CA526A9D54B8') {
 //                    $res['readMoreVendor'] = '更多 NOWnews 今日新聞 報導';
 //                }
-		if ($FeedParam['uuid'] === 'E83A4F6A-5327-4835-92B9-876179BC68EE') {
-		    $res['readMoreVendor'] = '更多 今日新聞 報導';
-		}
+                if ($FeedParam['uuid'] === 'E83A4F6A-5327-4835-92B9-876179BC68EE') {
+                    $res['readMoreVendor'] = '更多 今日新聞 報導';
+                }
 
                 $endTime = time();
                 if ($FeedParam['uuid'] == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
@@ -731,134 +731,137 @@ if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
         }
     }
 
-    public function petsmaoRss(Request $request) {
-	$url = "https://petsmao.nownews.com/wp-json/wp/v2/posts?page=1&per_page=50&_embed";
-	$content = file_get_contents("$url");
-	$jsonContent = json_decode($content, true);
-	$milliseconds = (int)round(microtime(true) * 1000);
-	$rssPosts = [];
-	$posts_id = null;
+    public function petsmaoRss(Request $request)
+    {
+        $url = "https://petsmao.nownews.com/wp-json/wp/v2/posts?page=1&per_page=50&_embed";
+        $content = file_get_contents("$url");
+        $jsonContent = json_decode($content, true);
+        $milliseconds = (int)round(microtime(true) * 1000);
+        $rssPosts = [];
+        $posts_id = null;
 
-	foreach($jsonContent as $data) {
-	    $posts_id .= $data['id'];
-	    $categories = $data["categories"];
-	    $minCategory = min($categories);
-	    $minCategoryIndex = array_search($minCategory, $categories);
+        foreach ($jsonContent as $data) {
+            $posts_id .= $data['id'];
+            $categories = $data["categories"];
+            $minCategory = min($categories);
+            $minCategoryIndex = array_search($minCategory, $categories);
 
-	    if (isset($data["metadata"]["can_send_rss"]) && $data["metadata"]["can_send_rss"][0] === "0") {
-		continue;
-	    }
+            if (isset($data["metadata"]["can_send_rss"]) && $data["metadata"]["can_send_rss"][0] === "0") {
+                continue;
+            }
 
-	    $item = [
-		'ID' => $data["id"],
-		'title' => $data["title"]["rendered"],
-		'author' => $data["_embedded"]["author"][0]["name"],
-		'guid' => $data["guid"]["rendered"],
-		'content' => $data["content"]["rendered"] . $this->getRelatedArticles($data),
-		'expert' => $data["excerpt"]["rendered"],
-		'subcategory' => $data["_embedded"]["wp:term"][0][$minCategoryIndex]["name"],
-		'date' => date_format(date_create($data["date"]), 'D d M Y H:i:s O'),
-		'startYmdtUnix' => strtotime($data["date"]) * 1000,
+            $item = [
+                'ID' => $data["id"],
+                'title' => $data["title"]["rendered"],
+                'author' => $data["_embedded"]["author"][0]["name"],
+                'guid' => $data["guid"]["rendered"],
+                'content' => $data["content"]["rendered"] . $this->getRelatedArticles($data),
+                'expert' => $data["excerpt"]["rendered"],
+                'subcategory' => $data["_embedded"]["wp:term"][0][$minCategoryIndex]["name"],
+                'date' => date_format(date_create($data["date"]), 'D d M Y H:i:s O'),
+                'startYmdtUnix' => strtotime($data["date"]) * 1000,
                 'publishTimeUnix' => strtotime($data["date"]) * 1000,
                 'updateTimeUnix' => strtotime($data["modified"]) * 1000,
-		'image' => $this->getFeaturedImageData($data),
-		'videoLink' => ""
-	    ];
-	    array_push($rssPosts, (object)$item);
+                'image' => $this->getFeaturedImageData($data),
+                'videoLink' => "",
+            ];
+            array_push($rssPosts, (object)$item);
 
-	    if (count($rssPosts) >= 30) {
-		break;
-	    }
-	}
+            if (count($rssPosts) >= 30) {
+                break;
+            }
+        }
 
-	$UUID = $this->create_uuid($posts_id);
-	return response()->view(strtolower('line'), ['rssPosts' => $rssPosts, 'milliseconds' => $milliseconds, 'UUID' => $UUID])->header('Content-Type', 'text/xml');
+        $UUID = $this->create_uuid($posts_id);
+        return response()->view(strtolower('line'), ['rssPosts' => $rssPosts, 'milliseconds' => $milliseconds, 'UUID' => $UUID])->header('Content-Type', 'text/xml');
     }
 
-    private function getFeaturedImageData($data) {
-	if (isset($data["_embedded"]["wp:featuredmedia"][0]["id"])) {
-	$image = [
-	    'ID' => $data["_embedded"]["wp:featuredmedia"][0]["id"],
-            'title' => $data["_embedded"]["wp:featuredmedia"][0]["title"]["rendered"],
-            'content' => $data["_embedded"]["wp:featuredmedia"][0]["caption"]["rendered"],
-            'guid' => $data["_embedded"]["wp:featuredmedia"][0]["source_url"]
-	];
-	    return (object)$image;
-	}
-	else {
-	    $image = [];
-	    return (object)$image;
-	}
-    }
-
-    private function getFeaturedImageDataObject($data) {
+    private function getFeaturedImageData($data)
+    {
         if (isset($data["_embedded"]["wp:featuredmedia"][0]["id"])) {
-    	    $image = [
+            $image = [
                 'ID' => $data["_embedded"]["wp:featuredmedia"][0]["id"],
                 'title' => $data["_embedded"]["wp:featuredmedia"][0]["title"]["rendered"],
                 'content' => $data["_embedded"]["wp:featuredmedia"][0]["caption"]["rendered"],
-                'guid' => $data["_embedded"]["wp:featuredmedia"][0]["source_url"]
+                'guid' => $data["_embedded"]["wp:featuredmedia"][0]["source_url"],
             ];
-            return $image;
-        }
-        else {
+            return (object)$image;
+        } else {
             $image = [];
             return (object)$image;
         }
     }
 
-    private function getRelatedArticles($data) {
-	$hasMore = false;
-	$moreStr = "";
-	$more1 = "";
-	$more2 = "";
-	$more3 = "";
-	$count = 0;
-	if (isset($data["metadata"]["relatedArticleTitle1"]) && isset($data["metadata"]["relatedArticleLink1"]) && $count < 2) {
-	    $title1 = $data["metadata"]["relatedArticleTitle1"][0];
-	    $link1 = $data["metadata"]["relatedArticleLink1"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
-	    $hasMore = true;
-	    $more1 = "<br/><a href=\"" . $link1 . "\">" . $title1 . "</a>"; 
-	    $count++;
-	}
-	if (isset($data["metadata"]["relatedArticleTitle2"]) && isset($data["metadata"]["relatedArticleLink2"]) && $count < 2) {
-            $title2 = $data["metadata"]["relatedArticleTitle2"][0];
-            $link2 = $data["metadata"]["relatedArticleLink2"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
-            $hasMore = true;
-            $more2 = "<br/><a href=\"" . $link2 . "\">" . $title2 . "</a>";
-	    $count++;
+    private function getFeaturedImageDataObject($data)
+    {
+        if (isset($data["_embedded"]["wp:featuredmedia"][0]["id"])) {
+            $image = [
+                'ID' => $data["_embedded"]["wp:featuredmedia"][0]["id"],
+                'title' => $data["_embedded"]["wp:featuredmedia"][0]["title"]["rendered"],
+                'content' => $data["_embedded"]["wp:featuredmedia"][0]["caption"]["rendered"],
+                'guid' => $data["_embedded"]["wp:featuredmedia"][0]["source_url"],
+            ];
+            return $image;
+        } else {
+            $image = [];
+            return (object)$image;
         }
-	if (isset($data["metadata"]["relatedArticleTitle3"]) && isset($data["metadata"]["relatedArticleLink3"]) && $count < 2) {
-            $title3 = $data["metadata"]["relatedArticleTitle3"][0];
-            $link3 = $data["metadata"]["relatedArticleLink3"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
-            $hasMore = true;
-            $more3 = "<br/><a href=\"" . $link3 . "\">" . $title3 . "</a>";
-	    $count++;
-        }
-
-	if ($hasMore) {
-	    $moreStr = "<div><p class=\"read-more-vendor\"><span>更多寵毛網新聞</span>" . $more1 . $more2 . $more3 . "</p></div>";
-	}
-	
-	$moreStr = $moreStr . "<div><br/><a href=\"http://line.me/ti/p/@nownews\">想看更多寵物資訊！立即加入NOWnews今日新聞官方帳號</a></div>"; 
-
-	return $moreStr;
     }
 
-    private function getRelatedArticlesArr($data, $websiteTitle) {
-	$hasMore = false;
-	$moreStr = "";
+    private function getRelatedArticles($data)
+    {
+        $hasMore = false;
+        $moreStr = "";
         $more1 = "";
         $more2 = "";
         $more3 = "";
         $count = 0;
-	if (isset($data["metadata"]["relatedArticleTitle1"]) && isset($data["metadata"]["relatedArticleLink1"])) {
+        if (isset($data["metadata"]["relatedArticleTitle1"]) && isset($data["metadata"]["relatedArticleLink1"]) && $count < 2) {
             $title1 = $data["metadata"]["relatedArticleTitle1"][0];
-	    $link1 = $data["metadata"]["relatedArticleLink1"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
+            $link1 = $data["metadata"]["relatedArticleLink1"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
+            $hasMore = true;
+            $more1 = "<br/><a href=\"" . $link1 . "\">" . $title1 . "</a>";
+            $count++;
+        }
+        if (isset($data["metadata"]["relatedArticleTitle2"]) && isset($data["metadata"]["relatedArticleLink2"]) && $count < 2) {
+            $title2 = $data["metadata"]["relatedArticleTitle2"][0];
+            $link2 = $data["metadata"]["relatedArticleLink2"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
+            $hasMore = true;
+            $more2 = "<br/><a href=\"" . $link2 . "\">" . $title2 . "</a>";
+            $count++;
+        }
+        if (isset($data["metadata"]["relatedArticleTitle3"]) && isset($data["metadata"]["relatedArticleLink3"]) && $count < 2) {
+            $title3 = $data["metadata"]["relatedArticleTitle3"][0];
+            $link3 = $data["metadata"]["relatedArticleLink3"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
+            $hasMore = true;
+            $more3 = "<br/><a href=\"" . $link3 . "\">" . $title3 . "</a>";
+            $count++;
+        }
+
+        if ($hasMore) {
+            $moreStr = "<div><p class=\"read-more-vendor\"><span>更多寵毛網新聞</span>" . $more1 . $more2 . $more3 . "</p></div>";
+        }
+
+        $moreStr = $moreStr . "<div><br/><a href=\"http://line.me/ti/p/@nownews\">想看更多寵物資訊！立即加入NOWnews今日新聞官方帳號</a></div>";
+
+        return $moreStr;
+    }
+
+    private function getRelatedArticlesArr($data, $websiteTitle)
+    {
+        $hasMore = false;
+        $moreStr = "";
+        $more1 = "";
+        $more2 = "";
+        $more3 = "";
+        $count = 0;
+        if (isset($data["metadata"]["relatedArticleTitle1"]) && isset($data["metadata"]["relatedArticleLink1"])) {
+            $title1 = $data["metadata"]["relatedArticleTitle1"][0];
+            $link1 = $data["metadata"]["relatedArticleLink1"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
             $hasMore = true;
             $more1 = "<br/><a href=\"" . $link1 . "\">" . $title1 . "</a>";
         }
-	if (isset($data["metadata"]["relatedArticleTitle2"]) && isset($data["metadata"]["relatedArticleLink2"])) {
+        if (isset($data["metadata"]["relatedArticleTitle2"]) && isset($data["metadata"]["relatedArticleLink2"])) {
             $title2 = $data["metadata"]["relatedArticleTitle2"][0];
             $link2 = $data["metadata"]["relatedArticleLink2"][0] . "?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday";
             $hasMore = true;
@@ -873,22 +876,23 @@ if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
             $count++;
         }
 
-	if ($hasMore) {
+        if ($hasMore) {
             $moreStr = "<div><p class=\"read-more-vendor\"><span>更多" . $websiteTitle . "新聞</span>" . $more1 . $more2 . $more3 . "</p></div>";
         }
 
-	return $moreStr;
+        return $moreStr;
     }
 
-    public function babyouRss($type) {
-	$url = "https://babyou.nownews.com/wp-json/wp/v2/posts?page=1&per_page=50&_embed&categories_exclude=15";
+    public function babyouRss($type)
+    {
+        $url = "https://babyou.nownews.com/wp-json/wp/v2/posts?page=1&per_page=50&_embed&categories_exclude=15";
         $content = file_get_contents("$url");
         $jsonContent = json_decode($content, true);
         $milliseconds = (int)round(microtime(true) * 1000);
         $rssPosts = [];
         $posts_id = null;
 
-        foreach($jsonContent as $data) {
+        foreach ($jsonContent as $data) {
             $posts_id .= $data['id'];
             $categories = $data["categories"];
             $minCategory = min($categories);
@@ -912,17 +916,17 @@ if ($uuid == 'B1729FBF-F5C5-2F05-F930-6D4E4678C7F4' && $this->develop == true) {
                 'updateTimeUnix' => strtotime($data["modified"]) * 1000,
                 'image' => $this->getFeaturedImageDataObject($data),
                 'videoLink' => "",
-		'sameCatNews' => $this->getRelatedArticlesArr($data, "姊妹淘")
+                'sameCatNews' => $this->getRelatedArticlesArr($data, "姊妹淘"),
             ];
 
 
-	    if (array_get($item, 'image')) {
-		$imageGuid = array_get(array_get($item, 'image'), 'guid');
-		$imageContent = array_get(array_get($item, 'image'), 'content');
-		$postContent = array_get($item, 'content');
-		$postContent = "<div class=\"main-photo\"><img src=\"" . $imageGuid . "\" alt=\"" . $imageContent . "\"/></div>" . $postContent;
-		array_set($item, 'content', $postContent);
-	    }
+            if (array_get($item, 'image')) {
+                $imageGuid = array_get(array_get($item, 'image'), 'guid');
+                $imageContent = array_get(array_get($item, 'image'), 'content');
+                $postContent = array_get($item, 'content');
+                $postContent = "<div class=\"main-photo\"><img src=\"" . $imageGuid . "\" alt=\"" . $imageContent . "\"/></div>" . $postContent;
+                array_set($item, 'content', $postContent);
+            }
 
             array_push($rssPosts, (object)$item);
 

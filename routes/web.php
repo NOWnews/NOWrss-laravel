@@ -21,9 +21,9 @@ Route::get('/subChannel/rssPetsmao', 'RssController@petsmaoRss');
 
 Route::resource('feeds', 'FeedController')->middleware('ipcheck');
 
-Route::get('/clear-cache', function() {
-	Artisan::call('cache:clear');
-	return "Cache is cleared";
+Route::get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
 });
 
 Route::get('/subChannel/babyouRss/{type}', 'RssController@babyouRss');
