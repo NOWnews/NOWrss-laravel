@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Route::get('/rss/{uuid}', 'RssController@index');
 
-Route::get('/subChannel/rssPetsmao', 'RssController@petsmaoRss');
+Route::get('/subChannel/rssPetsmao', 'RssController@petsmaoRss2');
 
 Route::resource('feeds', 'FeedController')->middleware('ipcheck');
 
@@ -26,5 +26,11 @@ Route::get('/clear-cache', function() {
 	return "Cache is cleared";
 });
 
-Route::get('/subChannel/babyouRss/{type}', 'RssController@babyouRss');
+Route::get('/subChannel/babyouRss/{type}', 'RssController@babyouRss2');
+
+Route::get('/subChannel/nowGamesRss/{type}', 'RssController@nowGamesRss');
+
+Route::get('/subChannel/petsmaoRss/{type}', 'RssController@petsmaoRss');
+
+Route::get('/subChannel/chinapostRss/{type}', 'RssController@chinapostRss');
 
