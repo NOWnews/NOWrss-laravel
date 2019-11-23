@@ -1,0 +1,31 @@
+@extends('base.taiwanmobilebase')
+
+@section('block')
+@foreach ($rssPosts as $rssPost)
+        <item>
+            <id>{{ $rssPost->ID }}</id>
+            <title><![CDATA[{{ $rssPost->title }}]]></title>
+            <link>{{ $rssPost->guid }}</link>
+            <description>
+                <![CDATA[
+                        @if ($rssPost->image)
+                        <div class="main-photo"><img src="{!! $rssPost->image->guid !!}" alt="{!! $rssPost->image->title !!}" /><cite>{!! $rssPost->image->content !!}</cite></div>
+                        @endif
+			%THISISAD%
+                        {!! $rssPost->content !!}
+                ]]>
+            </description>
+            <summary>
+                        {{ $rssPost->expert }}
+            </summary>
+            <guid isPermaLink="true">{{ $rssPost->guid }}</guid>
+            <subcategory>
+                <![CDATA[
+                    {{ $rssPost->subcategory }}
+                ]]>
+            </subcategory>
+            <author>{{ $rssPost->author }}</author>
+            <pubDate>{{ $rssPost->TaiwanMobileDate }}</pubDate>
+        </item>
+@endforeach
+@endsection
