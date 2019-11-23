@@ -34,3 +34,4 @@ Route::get('/subChannel/petsmaoRss/{type}', 'RssController@petsmaoRss');
 
 Route::get('/subChannel/chinapostRss/{type}', 'RssController@chinapostRss');
 
+Route::get('rss/subSites/{subSite}/templates/{template}', 'RssController@getWpPostRss');

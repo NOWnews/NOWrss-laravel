@@ -1287,4 +1287,20 @@ class RssController extends Controller
         $UUID = $this->create_uuid($posts_id);
         return response()->view(strtolower($type), ['rssPosts' => $rssPosts, 'milliseconds' => $milliseconds, 'UUID' => $UUID])->header('Content-Type', 'text/xml');
     }
+
+    public function getWpPostRss(Request $request, string $subSite, string $template)
+    {
+        $wordpressPostRssService = new WordpressPostRssService();
+        $postsRss = $wordpressPostRssService->getPostsRss($subSite);
+        $postIdsStr = $postsRss->pluck('ID')->implode('');
+
+        $viewData = [
+            'UUID' => $this->create_uuid($postIdsStr),
+            'rssPosts' => $postsRss,
+            'milliseconds' => Carbon::now('Asia/Taipei')->timestamp * 1000,
+        ];
+
+        return response()->view($template, $viewData)
+            ->header('Content-Type', 'text/xml');
+    }
 }
