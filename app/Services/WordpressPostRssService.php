@@ -24,6 +24,13 @@ class WordpressPostRssService
     ];
 
     const RSS_TEMPLATES = [
+        'fb' => [
+            'urlQueries' => [
+                'from' => 'fb',
+                'utm_source' => 'NaturalLink',
+                'utm_medium' => 'fb',
+            ],
+        ],
         'line' => [
             'urlQueries' => [
                 'from' => 'lntoday',
@@ -33,35 +40,39 @@ class WordpressPostRssService
         ],
         'yahoo' => [
             'urlQueries' => [
-                'from' => 'lntoday',
+                'from' => 'yahoo',
                 'utm_source' => 'NaturalLink',
-                'utm_medium' => 'lntoday',
+                'utm_medium' => 'yahoo',
             ],
         ],
         'sina' => [
             'urlQueries' => [
-                'from' => 'lntoday',
+                'from' => 'sina',
                 'utm_source' => 'NaturalLink',
-                'utm_medium' => 'lntoday',
+                'utm_medium' => 'sina',
             ],
         ],
         'newtalk2' => [
             'urlQueries' => [
-                'from' => 'lntoday',
+                'from' => 'newtalk2',
                 'utm_source' => 'NaturalLink',
-                'utm_medium' => 'lntoday',
+                'utm_medium' => 'newtalk2',
             ],
         ],
     ];
 
+    protected $postProperties;
+    protected $templateProperties;
+
     public function __construct(string $site, string $template)
     {
-
+        $this->postProperties = self::SITES_RSS_MAPPING[$site];
+        $this->templateProperties = self::RSS_TEMPLATES[$template];
     }
 
     public function getPostsRss(string $site): Collection
     {
-        $postProperties = self::SITES_RSS_MAPPING[$site];
+        $postProperties = $this->postProperties;
         $content = file_get_contents($postProperties['url']);
         $posts = collect(json_decode($content, true));
         $categorySubIndex = null;

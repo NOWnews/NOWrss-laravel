@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\WordpressPostRssService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Corcel\Model\Post;
@@ -1290,7 +1292,7 @@ class RssController extends Controller
 
     public function getWpPostRss(Request $request, string $subSite, string $template)
     {
-        $wordpressPostRssService = new WordpressPostRssService();
+        $wordpressPostRssService = new WordpressPostRssService($subSite, $template);
         $postsRss = $wordpressPostRssService->getPostsRss($subSite);
         $postIdsStr = $postsRss->pluck('ID')->implode('');
 
