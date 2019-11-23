@@ -165,7 +165,10 @@ class WordpressPostRssService
         $hasMore = false;
         $postsTemplate = '';
         $readMoreTemplate = null;
-        $linkQueryString = http_build_query($this->templateProperties['urlQueries']);
+        $urlQueries = $this->templateProperties['urlQueries'];
+
+        $urlQueries['utm_campaign'] = date('Ymd');
+        $linkQueryString = http_build_query($urlQueries);
 
         for ($i = 1; $i <= 3; $i++) {
             if (!isset($post['metadata'])) {
