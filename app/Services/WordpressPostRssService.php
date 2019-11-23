@@ -69,7 +69,7 @@ class WordpressPostRssService
         $posts = $posts->map(function ($post) use ($postProperties) {
             return (object)[
                 'ID' => $post['id'],
-                'title' => $post['title']['rendered'],
+                'title' => $this->replaceInvalidChar($post['title']['rendered']),
                 'author' => $post['_embedded']['author'][0]['name'],
                 'guid' => $post['guid']['rendered'],
                 'content' => $this->replaceInvalidChar("{$post['content']['rendered']}新聞來源為「NOWnews今日新聞」"),
