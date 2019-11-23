@@ -31,6 +31,13 @@ class WordpressPostRssService
                 'utm_medium' => 'fb',
             ],
         ],
+        'hinet' => [
+            'urlQueries' => [
+                'from' => 'hinet',
+                'utm_source' => 'NaturalLink',
+                'utm_medium' => 'hinet',
+            ],
+        ],
         'line' => [
             'urlQueries' => [
                 'from' => 'lntoday',
@@ -38,11 +45,32 @@ class WordpressPostRssService
                 'utm_medium' => 'lntoday',
             ],
         ],
-        'yahoo' => [
+        'linehk' => [
             'urlQueries' => [
-                'from' => 'yahoo',
+                'from' => 'linehk',
                 'utm_source' => 'NaturalLink',
-                'utm_medium' => 'yahoo',
+                'utm_medium' => 'linehk',
+            ],
+        ],
+        'newtalk' => [
+            'urlQueries' => [
+                'from' => 'newtalk',
+                'utm_source' => 'NaturalLink',
+                'utm_medium' => 'newtalk',
+            ],
+        ],
+        'newtalk2' => [
+            'urlQueries' => [
+                'from' => 'newtalk2',
+                'utm_source' => 'NaturalLink',
+                'utm_medium' => 'newtalk2',
+            ],
+        ],
+        'pollster' => [
+            'urlQueries' => [
+                'from' => 'pollster',
+                'utm_source' => 'NaturalLink',
+                'utm_medium' => 'pollster',
             ],
         ],
         'sina' => [
@@ -52,11 +80,18 @@ class WordpressPostRssService
                 'utm_medium' => 'sina',
             ],
         ],
-        'newtalk2' => [
+        'taiwanmobile' => [
             'urlQueries' => [
-                'from' => 'newtalk2',
+                'from' => 'taiwanmobile',
                 'utm_source' => 'NaturalLink',
-                'utm_medium' => 'newtalk2',
+                'utm_medium' => 'taiwanmobile',
+            ],
+        ],
+        'yahoo' => [
+            'urlQueries' => [
+                'from' => 'yahoo',
+                'utm_source' => 'NaturalLink',
+                'utm_medium' => 'yahoo',
             ],
         ],
     ];

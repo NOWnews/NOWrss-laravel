@@ -12,10 +12,7 @@
 		@if ($rssPost->sameCatNews)
                     <div>
                         <p class="read-more-vendor"><span>延伸閱讀：</span>
-                            @foreach ($rssPost->sameCatNews as $News)
-                                <br/>
-                                <a href="{!! $News->guid !!}&amp;from=newtalk&amp;utm_source=NaturalLink&amp;utm_medium=newtalk&amp;utm_campaign={{ date('Ymd') }}">{{ $News->title }}</a>
-                            @endforeach
+                            {!! $rssPost->sameCatNews !!}
                         </p>
                     </div>
                 @endif

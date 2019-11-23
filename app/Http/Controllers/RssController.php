@@ -1302,7 +1302,7 @@ class RssController extends Controller
             'milliseconds' => Carbon::now('Asia/Taipei')->timestamp * 1000,
         ];
 
-        return response()->view($template, $viewData)
+        return response()->view("rss.{$template}", $viewData)
             ->header('Content-Type', 'text/xml');
     }
 }

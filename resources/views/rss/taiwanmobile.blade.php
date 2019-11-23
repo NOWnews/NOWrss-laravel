@@ -25,7 +25,7 @@
                 ]]>
             </subcategory>
             <author>{{ $rssPost->author }}</author>
-            <pubDate>{{ $rssPost->TaiwanMobileDate }}</pubDate>
+            <pubDate>{{ $rssPost->date }}</pubDate>
         </item>
 @endforeach
 @endsection
