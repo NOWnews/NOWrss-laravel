@@ -22,7 +22,10 @@
                 @if ($rssPost->sameCatNews)
                     <div>
                         <p class="read-more-vendor"><span>{{ $rssPost->readMoreVendor }}</span>
-                            {!! $rssPost->sameCatNews !!}
+                            @foreach ($rssPost->sameCatNews as $News)
+                                <br/>
+                                <a href="{!! $News->guid !!}&amp;from=Yahoo&amp;utm_source=NaturalLink&amp;utm_medium=Yahoo&amp;utm_campaign={{ date('Ymd') }}">{{ $News->title }}</a>
+                            @endforeach
                         </p>
                     </div>
                 @endif

@@ -15,7 +15,9 @@
 			@if ($rssPost->sameCatNews)
 			<div>
 			    <h2>相關新聞</h2>
-                {!! $rssPost->sameCatNews !!}
+			    @foreach ($rssPost->sameCatNews as $News)
+			    <h3><a href="{{ $News->guid }}&amp;utm_source=sina&amp;utm_medium=rss&amp;utm_campaign={{ date('Ymd') }}">{{ $News->title }}</a><h3>
+			    @endforeach
 			</div>
 			@endif
                 ]]>
