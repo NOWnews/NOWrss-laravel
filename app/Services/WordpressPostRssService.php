@@ -93,6 +93,7 @@ class WordpressPostRssService
                 'image' => $this->getFeaturedImage($post),
                 'videoLink' => $postProperties['hasVideo'] ? ($this->getPostMeta($post['id'], 'youtubeLink') ?? '') : '',
                 'sameCatNews' => $this->getReadMoreHtml($post, $postProperties['name']),
+                'readMoreVendor' => "更多{$postProperties['name']}新聞",
             ];
         });
 
@@ -164,7 +165,7 @@ class WordpressPostRssService
         $hasMore = false;
         $postsTemplate = '';
         $readMoreTemplate = null;
-        $linkQueries = '?from=lntoday&utm_source=NaturalLink&utm_medium=lntoday';
+        $linkQueryString = http_build_query($this->templateProperties['urlQueries']);
 
         for ($i = 1; $i <= 3; $i++) {
             if (!isset($post['metadata'])) {
@@ -179,7 +180,7 @@ class WordpressPostRssService
             }
 
             $hasMore = true;
-            $postsTemplate .= "<br/><a href=\"{$link[0]}{$linkQueries}\">{$title[0]}</a>>";
+            $postsTemplate .= "<br/><a href=\"{$link[0]}?{$linkQueryString}\">{$title[0]}</a>>";
         }
 
         if (!$hasMore) {
