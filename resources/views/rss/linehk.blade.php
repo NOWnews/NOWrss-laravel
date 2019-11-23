@@ -1,7 +1,7 @@
 @extends('base.linebase')
 
 @section('block')
-@foreach ($rssPosts as $rssPost)
+    @foreach ($rssPosts as $rssPost)
         <article>
             <ID>{{ $rssPost->ID }}</ID>
             <nativeCountry>HK</nativeCountry>
@@ -17,7 +17,7 @@
             <publishTime>{{ $rssPost->date }}</publishTime>
             <updateTimeUnix>{{ $rssPost->updateTimeUnix }}</updateTimeUnix>
             <contents>
-		@if ($rssPost->image)
+                @if ($rssPost->image)
                     <image>
                         <title>{{ $rssPost->image->title }}</title>
                         <url>{{ $rssPost->image->guid }}</url>
@@ -26,7 +26,7 @@
                 <text>
                     <content>
                         <![CDATA[
-                            {!! $rssPost->content !!}
+                        {!! $rssPost->content !!}
                         ]]>
                     </content>
                 </text>
@@ -34,5 +34,5 @@
             <author>{{ $rssPost->author }}</author>
             <sourceUrl>{{ $rssPost->guid }}</sourceUrl>
         </article>
-@endforeach
+    @endforeach
 @endsection
