@@ -61,9 +61,9 @@ class WordpressPostRssService
         ],
         'newtalk2' => [
             'urlQueries' => [
-                'from' => 'newtalk2',
+                'from' => 'newtalk',
                 'utm_source' => 'NaturalLink',
-                'utm_medium' => 'newtalk2',
+                'utm_medium' => 'newtalk',
             ],
         ],
         'pollster' => [
